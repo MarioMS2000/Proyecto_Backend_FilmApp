@@ -1,7 +1,0 @@
-1- Instalaciones:
-    npm init -y -> Inicializa tu proyecto Node.js y crea el archivo package.json con valores por defecto.
-    npm install express mongoose dotenv morgan -> Instala dependencias principales: Express → Framework para crear el servidor. Mongoose → ODM para trabajar con MongoDB. dotenv → Manejo de variables de entorno (.env). Morgan → Logger de peticiones HTTP
-    npm install -D nodemon -> Nodemon → Reinicia automáticamente el servidor al hacer cambios
-    npm install pg -> pg → Cliente para conectar Node.js con PostgreSQL
-    npm install pg-hstore -> Es una librería auxiliar que usa Sequelize solo si trabajas con PostgreSQL. Sirve para convertir datos tipo JSON ↔ texto en PostgreSQL
-    npm install sequelize -> Es el ORM (Object Relational Mapper).. Te permite trabajar con la base de datos usando JavaScript en lugar de SQL puro.
