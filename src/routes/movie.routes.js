@@ -6,12 +6,12 @@ const {searchMovies,getMovieByTitle,getAllMovies,createMovie,updateMovie,deleteM
 
 //user
 router.get("/search", searchMovies);
-router.get("/search/:title", getMovieByTitle);
+router.get("/:title", getMovieByTitle);
 
 //admin
-router.get("/movies", /* isAuth, isAdmin, */ getAllMovies);
-router.post("/api/movie", /* isAuth, isAdmin, */ createMovie);
-router.put("/api/movie/:id", /* isAuth, isAdmin, */ updateMovie);
-router.delete("/api/movie/:id", /* isAuth, isAdmin, */ deleteMovie);
+router.get("/", /* isAuth, isAdmin, */ getAllMovies);
+router.post("/", /* isAuth, isAdmin, */ createMovie);
+router.put("/:id", /* isAuth, isAdmin, */ updateMovie);
+router.delete("/:id", /* isAuth, isAdmin, */ deleteMovie);
 
 module.exports = router;
