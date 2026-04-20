@@ -9,6 +9,7 @@ const userRoutes = require("./routes/user.routes");
 const movieRoutes = require("./routes/movie.routes");
 const favoritesRoutes = require("./routes/favorites.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
+const cookieParser = require('cookie-parser')
 
 const mongo = require("./config/db.mongo");
 mongo.connectMongo();
@@ -22,6 +23,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser())
 
 
 app.use("/", webRoutes);

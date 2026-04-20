@@ -51,13 +51,51 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     }
   }
 
-  /* const login = async (req, res) => {
+  const login = async (req, res) => {
     const { email, password } = req.body
 
     if (!email || !password) {
       res.status(400).json({message: "Email and password required"})
     }
-  } */
+
+    try {
+      const user = await User.findOne({where: {email}})
+
+      if (!user) {
+        return res.status(401).json({message: "Invalid email or password"})
+      }
+
+      const isValidPassword = await bcrypt.compare(password, user.password)
+
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      const accessToken = jwt.sign({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }, accessTokenSecret, {expiresIn: "20m"})
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false,
+        maxAge: 20 * 60 * 1000
+      })
+
+      return res.status(200).json({accessToken})
+
+    } catch(err) {
+      return res.status(500).json({ message: "Database error" });
+    }
+  }
+
+  const logout = (_req, res) => {
+    res.clearCookie("accessToken")
+    return res.status(200).json({ message: "Sesion cerrada" })
+  }
 
   const showRegister = (req, res) => {
     res.render("pages/register");
@@ -67,16 +105,12 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     res.render("pages/login");
   }
 
-const authController = {
-  register,
-  // login,
-  showRegister,
-  showLogin,
-};
+
 
 module.exports = {
   register,
-  // login,
+  login,
+  logout,
   showRegister,
   showLogin
 }
