@@ -6,12 +6,10 @@ const Favorite = sequelize.define(
     {
         user_id : {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
         },
         movie_id : {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
         }
     },
