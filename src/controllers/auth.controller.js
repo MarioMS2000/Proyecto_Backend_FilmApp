@@ -51,13 +51,13 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     }
   }
 
-  const login = async (req, res) => {
+  /* const login = async (req, res) => {
     const { email, password } = req.body
 
     if (!email || !password) {
       res.status(400).json({message: "Email and password required"})
     }
-  }
+  } */
 
   const showRegister = (req, res) => {
     res.render("pages/register");
@@ -74,4 +74,9 @@ const authController = {
   showLogin,
 };
 
-module.exports = authController;
+module.exports = {
+  register,
+  // login,
+  showRegister,
+  showLogin
+}

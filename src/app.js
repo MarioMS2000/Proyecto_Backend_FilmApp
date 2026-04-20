@@ -20,9 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", (req, res) => {
-  res.json({msg: "HOLA"});
-});
+// app.use("/", (req, res) => {
+//   res.json({msg: "HOLA"});
+// });
 app.use("/", webRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
