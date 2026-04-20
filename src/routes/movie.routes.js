@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const {searchMovies,getMovieByTitle,getAllMovies,createMovie,updateMovie,deleteMovie} = require("../controllers/movie.controller");
+const {searchMovies,getMovieByTitle,getAllMovies,createMovie,updateMovie,deleteMovie,getRandomMoviesController} = require("../controllers/movie.controller");
 
 //routes middlewares auth, admin
 
 //user
+router.get("/random", getRandomMoviesController);
 router.get("/search", searchMovies);
 router.get("/:title", getMovieByTitle);
 

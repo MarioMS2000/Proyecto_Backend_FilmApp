@@ -1,7 +1,4 @@
-const {
-  searchMovie,
-  getMovieByIdService,
-} = require("../services/movie.service");
+const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/movie.service");
 const Movie = require("../models/mongo/Movie");
 
 //USERS buscar peli
@@ -125,6 +122,27 @@ const deleteMovie = async (req, res) => {
     });
   }
 };
+
+const getRandomMoviesController = async (req,res) => {
+  try {
+    const movies = await getRandomMovies();
+
+    const response = movies.map((movie) => ({
+      title: movie.title || movie.Title,
+      poster: movie.poster || movie.Poster,
+      year: movie.year || movie.Year,
+      director: movie.director || movie.Director,
+      genre: movie.genre || movie.Genre,
+      duration: movie.duration || movie.Runtime,
+    }));
+    return res.status(200).json(response);
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error obteniendo películas aleatorias",
+    });
+  }
+}
 module.exports = {
   searchMovies,
   getMovieByTitle,
@@ -132,4 +150,5 @@ module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
+  getRandomMoviesController,
 };
