@@ -10,8 +10,8 @@ const movieRoutes = require("./routes/movie.routes");
 const favoritesRoutes = require("./routes/favorites.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
-const connectMongo = require("./config/db.mongo");
-connectMongo();
+const mongo = require("./config/db.mongo");
+mongo.connectMongo();
 
 const app = express();
 

@@ -69,7 +69,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
 const authController = {
   register,
-  login,
+  // login,
   showRegister,
   showLogin,
 };

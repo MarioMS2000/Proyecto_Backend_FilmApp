@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/db.sql");
 
-const Favorite = sequelize.define(
+const Favorite = sequelize.connectSql().define(
     "Favorite",
     {
         id: {
