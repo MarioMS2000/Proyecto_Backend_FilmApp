@@ -6,7 +6,6 @@ const Favorite = sequelize.define(
     {
         id: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
         },
         user_id: {
