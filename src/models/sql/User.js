@@ -46,7 +46,7 @@ const User = sequelize.define(
     },
     {
         tableName: "users",
-        timestamps: false,
+        timestamps: true, // mete los campos de created and updated
         underscored: true,
     }
 );

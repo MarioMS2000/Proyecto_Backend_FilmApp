@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const { User } = require('../models/sql/User')
+const User = require('../models/sql/User')
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
@@ -67,7 +67,12 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     res.render("pages/login");
   }
 
-  
+const authController = {
+  register,
+  login,
+  showRegister,
+  showLogin,
+};
 
 module.exports = {
   register,
