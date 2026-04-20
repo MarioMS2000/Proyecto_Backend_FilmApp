@@ -10,6 +10,9 @@ const movieRoutes = require("./routes/movie.routes");
 const favoritesRoutes = require("./routes/favorites.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
+const connectMongo = require("./config/db.mongo");
+connectMongo();
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -20,14 +23,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use("/", (req, res) => {
-//   res.json({msg: "HOLA"});
-// });
+
 app.use("/", webRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/movies", movieRoutes);
 app.use("/favorites", favoritesRoutes);
 app.use(errorMiddleware);
+
+
+app.use((req, res) => {
+  res.status(404).json({ msg: "Ruta no encontrada" });
+});
 
 module.exports = app;

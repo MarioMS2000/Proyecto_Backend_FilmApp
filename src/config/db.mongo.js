@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 
-async function connectMongo(uri = process.env.MONGO_URI) {
-  if (!uri) return null;
-  return mongoose.connect(uri);
+const connectMongo = async () => {
+  const mongoURI = process.env.MONGO_URI;
+  try {
+    if (!mongoURI) throw new Error("Configuración de base de datos inválida");
+    await mongoose.connect(mongoURI);
+    console.log("MongoDB conectado");
+  } catch (error) {
+    console.error("Error al conectar con MongoDB");
+    process.exit(1);
+  }
 }
 
 module.exports = {
