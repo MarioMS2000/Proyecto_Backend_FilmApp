@@ -1,7 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-function connectSql() {
-  return new Sequelize(
+const connectSql = new Sequelize(
     process.env.DB_NAME || "movie_app",
     process.env.DB_USER || "postgres",
     process.env.DB_PASSWORD || "",
@@ -11,8 +10,6 @@ function connectSql() {
       logging: false,
     }
   );
-}
 
-module.exports = {
-  connectSql,
-};
+
+module.exports = connectSql
