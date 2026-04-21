@@ -1,26 +1,29 @@
-const jwt = require('jsonwebtoken')
+const { verifyAccessToken } = require("../services/token.service");
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+const getTokenFromRequest = (req) => {
+  const authHeader = req.headers.authorization;
+  const bearerToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
 
-const isAuth = (req, res, next) => {
-  const token = req.cookies?.accessToken || req.headers.authorization?.split(" ")[1]
+  return req.cookies?.accessToken || bearerToken;
+};
+
+const requireAuth = (req, res, next) => {
+  const token = getTokenFromRequest(req);
 
   if (!token) {
-    return res.status(401).json({message: "Unauthorized"})
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
-  jwt.verify(token, accessTokenSecret, (err, user) => {
-    if (err) {
-      return res.status(403).json({message: "Forbidden"})
-    }
-
-    req.user = user
-    return next()
-  })
-}
-
-
+  try {
+    req.user = verifyAccessToken(token);
+    return next();
+  } catch (error) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+};
 
 module.exports = {
-  isAuth
-}
+  requireAuth,
+};
