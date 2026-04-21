@@ -11,8 +11,8 @@ const favoritesRoutes = require("./routes/favorites.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 const cookieParser = require('cookie-parser')
 
-const mongo = require("./config/db.mongo");
-mongo.connectMongo();
+// const mongo = require("./config/db.mongo");
+// mongo.connectMongo();
 
 const app = express();
 

@@ -9,20 +9,20 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     const { name, email, password, password2, role } = req.body
 
     if (!email || !name || !password) {
-      return res.status(400).json({message: "Email, name and password required"})
+      return res.render("pages/register", {data: false, message: "Email, name and password required"})
     }
 
     const saferole = role === 'admin' ? 'admin' : 'user'
 
     if (password != password2) {
-      return res.status(400).json({message: "password dosen't match"})
+      return res.render("pages/register", {message: "password dosen't match"})
     }
 
     try {
       const existingUser = await User.findOne({where: { email }})
 
       if (existingUser) {
-        return res.status(409).json({message: "Email already in use"})
+        return res.render("pages/register",{message: "Email already in use"})
       }
 
       const passwordHash = await bcrypt.hash(password, 10)
@@ -34,7 +34,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
         role: saferole
       })
 
-      return res.status(201).json({
+      return res.status(201).render("pages/login", {
         message: "User registered successfully",
          user: {
           id: user.id,
@@ -55,20 +55,20 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
     const { email, password } = req.body
 
     if (!email || !password) {
-      res.status(400).json({message: "Email and password required"})
+      res.render("pages/login", {message: "Email and password required"})
     }
 
     try {
       const user = await User.findOne({where: {email}})
 
       if (!user) {
-        return res.status(401).json({message: "Invalid email or password"})
+        return res.render("pages/login",{message: "Invalid email or password"})
       }
 
       const isValidPassword = await bcrypt.compare(password, user.password)
 
       if (!isValidPassword) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.render("pages/login",{ message: "Invalid email or password" });
       }
 
       const accessToken = jwt.sign({
@@ -85,7 +85,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
         maxAge: 20 * 60 * 1000
       })
 
-      return res.status(200).json({accessToken})
+      return res.redirect("/movies")
 
     } catch(err) {
       return res.status(500).json({ message: "Database error" });
@@ -98,11 +98,11 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
   }
 
   const showRegister = (req, res) => {
-    res.render("pages/register");
+    res.render("pages/register", {message: ""});
   }
   
   const showLogin = (req, res) => {
-    res.render("pages/login");
+    res.render("pages/login", {message: ""});
   }
 
 
