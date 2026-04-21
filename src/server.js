@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
-    await sequelize.connectSql();
+    await sequelize.authenticate();
     console.log("Conexion a PostgreSQL establecida correctamente");
 
     app.listen(PORT, () => {
