@@ -1,9 +1,13 @@
-const authorizeAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({message: "Admin only"})
-  } 
+const requireRole = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
-  return next()
-}
+    return next();
+  };
+};
 
-module.exports = authorizeAdmin;
+module.exports = {
+  requireRole,
+};

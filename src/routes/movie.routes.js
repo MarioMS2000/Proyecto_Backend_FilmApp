@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {searchMovies,getMovieByTitle,getAllMovies,createMovie,updateMovie,deleteMovie} = require("../controllers/movie.controller");
-const {isAuth} = require('../middlewares/auth.middleware')
+const { requireAuth } = require("../middlewares/auth.middleware");
+const { requireRole } = require("../middlewares/role.middleware");
 
 //routes middlewares auth, admin
 
@@ -10,9 +11,9 @@ router.get("/search", searchMovies);
 router.get("/search/:title", getMovieByTitle);
 
 //admin
-router.get("/movies", isAuth, /* isAdmin, */ getAllMovies);
-router.post("/api/movie", isAuth, /* isAdmin, */ createMovie);
-router.put("/api/movie/:id", isAuth, /* isAdmin, */ updateMovie);
-router.delete("/api/movie/:id", isAuth, /* isAdmin, */ deleteMovie);
+router.get("/movies", getAllMovies);
+router.post("/api/movie", requireAuth, requireRole("admin"), createMovie);
+router.put("/api/movie/:id", requireAuth, requireRole("admin"), updateMovie);
+router.delete("/api/movie/:id", requireAuth, requireRole("admin"), deleteMovie);
 
 module.exports = router;
