@@ -1,16 +1,15 @@
 const { Sequelize } = require("sequelize");
 
-  function connectSql() {
-    return new Sequelize(
-      process.env.DB_NAME || "movie_app",
-      process.env.DB_USER || "postgres",
-      process.env.DB_PASSWORD || "",
-      {
-        host: process.env.DB_HOST || "localhost",
-        dialect: "postgres",
-        logging: false,
-      }
-    );
+const sequelize = new Sequelize(
+  process.env.DB_NAME || "movie_app",
+  process.env.DB_USER || "postgres",
+  process.env.DB_PASSWORD || "",
+  {
+    host: process.env.DB_HOST || "localhost",
+    dialect: "postgres",
+    port: process.env.DB_PORT || 5432,
+    logging: false,
   }
+);
 
-module.exports = {connectSql}
+module.exports = sequelize;

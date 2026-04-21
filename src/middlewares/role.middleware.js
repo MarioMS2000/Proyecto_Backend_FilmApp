@@ -1,8 +1,13 @@
-function roleMiddleware(role) {
+const requireRole = (...roles) => {
   return (req, res, next) => {
-    req.requiredRole = role;
-    next();
-  };
-}
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
-module.exports = roleMiddleware;
+    return next();
+  };
+};
+
+module.exports = {
+  requireRole,
+};
