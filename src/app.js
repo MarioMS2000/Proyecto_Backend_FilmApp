@@ -29,7 +29,7 @@ app.use(cookieParser())
 app.use("/", webRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/movies", movieRoutes);
+app.use("/api/movie", movieRoutes);
 app.use("/favorites", favoritesRoutes);
 app.use(errorMiddleware);
 
