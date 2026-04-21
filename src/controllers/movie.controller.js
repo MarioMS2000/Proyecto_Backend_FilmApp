@@ -1,3 +1,4 @@
+const { getMovieReviews } = require("../services/scraping.service");
 const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/movie.service");
 const Movie = require("../models/mongo/Movie");
 
@@ -12,7 +13,7 @@ const searchMovies = async (req, res) => {
       });
     }
     const movies = await searchMovie(title);
-    
+
     const response = movies.map((movie) => {
       return {
         title: movie.title || movie.Title,
@@ -44,6 +45,8 @@ const getMovieByTitle = async (req, res) => {
     }
     const movie = movies[0];
 
+    const reviews = await getMovieReviews(movie.title || movie.Title);
+
     const response = {
       title: movie.title || movie.Title,
       poster: movie.poster || movie.Poster,
@@ -54,6 +57,7 @@ const getMovieByTitle = async (req, res) => {
       plot: movie.plot || movie.Plot,
       actors: movie.actors || movie.Actors,
       rating: movie.imdbRating,
+      reviews,
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -123,7 +127,7 @@ const deleteMovie = async (req, res) => {
   }
 };
 
-const getRandomMoviesController = async (req,res) => {
+const getRandomMoviesController = async (req, res) => {
   try {
     const movies = await getRandomMovies();
 
@@ -136,13 +140,12 @@ const getRandomMoviesController = async (req,res) => {
       duration: movie.duration || movie.Runtime,
     }));
     return res.status(200).json(response);
-
   } catch (error) {
     return res.status(500).json({
       message: "Error obteniendo películas aleatorias",
     });
   }
-}
+};
 module.exports = {
   searchMovies,
   getMovieByTitle,
