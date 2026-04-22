@@ -27,7 +27,7 @@ const login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, accessTokenCookieOptions);
 
-    return res.redirect("/movies");
+    return res.redirect("/");
   } catch (error) {
     return res.render("pages/login", { message: error.message });
   }

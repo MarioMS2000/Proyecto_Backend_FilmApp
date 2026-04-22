@@ -1,3 +1,5 @@
+const User = require("../models/sql/User");
+
 const viewsController = {
   home(req, res) {
     res.render("pages/index", { message: "" });
@@ -38,8 +40,9 @@ const viewsController = {
     });
   },
 
-  users(req, res) {
-    res.render("pages/users", { user: req.user });
+  async users(req, res) {
+    const users = await User.findAll()
+    res.render("pages/users", { users });
   },
 };
 
