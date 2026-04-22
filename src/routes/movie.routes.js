@@ -12,9 +12,9 @@ const { requireAuth } = require("../middlewares/auth.middleware");
 const { requireRole } = require("../middlewares/role.middleware");
 
 // User
-router.get("/some", requireAuth, getRandomMoviesController);
-router.get("/search", requireAuth, searchMovies);
-router.get("/search/:title", requireAuth, getMovieByTitle);
+router.get("/random", requireAuth, requireRole("user"), getRandomMoviesController);
+router.get("/search", requireAuth, requireRole("user"), searchMovies);
+router.get("/search/:title", requireAuth, requireRole("user"), getMovieByTitle);
 
 // Admin
 router.get("/", requireAuth, requireRole("admin"), getAllMovies);

@@ -1,32 +1,46 @@
 const viewsController = {
   home(req, res) {
-    res.render("pages/index");
+    res.render("pages/index", { message: "" });
   },
 
   login(req, res) {
-    res.render("pages/login");
+    res.render("pages/login", { message: "" });
   },
+
   signup(req, res) {
-    res.render("pages/register");
+    res.render("pages/register", { message: "" });
   },
-  changePassword(req, res) {
-    res.render("pendiente");
+
+  restorePassword(req, res) {
+    res.render("pages/restorepassword", { message: "" });
   },
+
   dashboard(req, res) {
-    res.render("pendiente");
+    res.render("pages/dashboard", { user: req.user });
   },
+
   profile(req, res) {
-    res.render("pendiente");
+    res.render("pages/profile", { user: req.user });
   },
+
   movies(req, res) {
-    res.render("pages/movies");
+    res.render("pages/movies", { user: req.user });
   },
+
   search(req, res) {
-    res.render("pages/search");
+    res.render("pages/search", { user: req.user });
   },
-  useres(req, res) {
-    res.render("pages/users");
-  }
+
+  movieDetail(req, res) {
+    res.render("pages/movie-detail", {
+      user: req.user,
+      title: req.params.title,
+    });
+  },
+
+  users(req, res) {
+    res.render("pages/users", { user: req.user });
+  },
 };
 
 module.exports = viewsController;

@@ -38,29 +38,26 @@ const logout = ( req, res) => {
   return res.status(200).json({ message: "Sesion cerrada" });
 };
 
-const updatePassword = async (req, res) => {
+const restorePassword = async (req, res) => {
   try {
-    const user = await authService.updatePassword(req.body)
-    res.render("pages/users", {message: "Password changed successfully", user})
-
-  } catch(error) {
-    res.render("pages/users", {message: error.message})
+    const user = await authService.updatePassword(req.body);
+    return res.status(200).json({
+      message: "Password changed successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
-}
-
-const showRegister = (_req, res) => {
-  res.render("pages/register", { message: "" });
-};
-
-const showLogin = (_req, res) => {
-  res.render("pages/login", { message: "" });
 };
 
 module.exports = {
   register,
   login,
   logout,
-  updatePassword,
-  showRegister,
-  showLogin,
+  restorePassword,
 };

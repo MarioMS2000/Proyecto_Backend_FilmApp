@@ -17,8 +17,8 @@ router.get("/profile", requireAuth, viewsController.profile);
 router.get("/movies", requireAuth, viewsController.movies);
 
 // Usuario
-router.get("/search", requireAuth, viewsController.search);
-router.get("/search/:title", requireAuth, viewsController.movieDetail);
+router.get("/search", requireAuth, requireRole("user"), viewsController.search);
+router.get("/search/:title", requireAuth, requireRole("user"), viewsController.movieDetail);
 
 // Admin
 router.get("/users", requireAuth, requireRole("admin"), viewsController.users);
