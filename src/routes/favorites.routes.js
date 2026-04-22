@@ -1,5 +1,8 @@
 const express = require("express");
-const { getFavorites, addFavorite, removeFavorite } = require("../controllers/favorites.controller");
+const { getFavorites, 
+        addFavorite, 
+        removeFavorite } = require("../controllers/favorites.controller");
+        
 const { requireAuth } = require("../middlewares/auth.middleware");
 const { requireRole } = require("../middlewares/role.middleware");
 

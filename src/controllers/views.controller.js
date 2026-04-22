@@ -29,4 +29,4 @@ const viewsController = {
   }
 };
 
-module.exports = vie
+module.exports = viewsController;
