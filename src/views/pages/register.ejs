@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Registro</h1>
-    <form action="/auth/register" method="post">
+    <form action="/api/signup" method="post">
       <label for="name">Name</label>
       <input type="text" name="name" id="name" required>
       <label for="email">Email</label>
@@ -21,6 +21,6 @@
     </form>
     
     <p><%= message %></p>
-    <a href="/auth/login">Login</a>
+    <a href="/login">Login</a>
   </body>
 </html>
