@@ -46,7 +46,26 @@ const login = async ({ email, password }) => {
   return user;
 };
 
+const updatePassword = async ({id, password, newPassword, newPassword2}) => {
+  const user = await User.findOne({where: {id}})
+  const isValidPassword = await bcrypt.compare(password, user.password);
+
+  if (!isValidPassword) {
+    throw new Error("Invalid password")
+  }
+
+  if (!newPassword || newPassword !== newPassword2) {
+    throw new Error("New password dosen't match")
+  }
+
+  const updatedPassword = await bcrypt.hash(newPassword, 10)
+  await user.update({password: updatedPassword})
+
+  return user
+}
+
 module.exports = {
   register,
   login,
+  updatePassword
 };
