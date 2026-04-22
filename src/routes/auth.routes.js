@@ -3,7 +3,7 @@ const {
     register,
     login,
     logout,
-    changePassword,
+    updatePassword,
 } = require("../controllers/auth.controller");
 
 const router = express.Router();
@@ -11,6 +11,6 @@ const router = express.Router();
 router.post("/signup", register);
 router.post("/login", login);
 router.post("/logout", logout);
-router.post("/changepassword", changePassword);
+router.post("/update_password", updatePassword);
 
 module.exports = router;

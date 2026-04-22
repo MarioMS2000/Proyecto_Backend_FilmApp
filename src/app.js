@@ -17,8 +17,8 @@ const favoritesRoutes = require("./routes/favorites.routes");
 const swaggerSpec = require("./config/swagger")
 const errorMiddleware = require("./middlewares/error.middleware");
 
-// const mongo = require("./config/db.mongo");
-// mongo.connectMongo();
+const mongo = require("./config/db.mongo");
+mongo.connectMongo();
 
 const app = express();
 

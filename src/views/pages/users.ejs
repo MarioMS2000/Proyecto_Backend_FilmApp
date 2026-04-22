@@ -8,5 +8,17 @@
   </head>
   <body>
     <h1>Usuarios</h1>
+    <p><%= user.email %></p>
+    <p><%= user.name %></p>
+    <form action="/auth/updatePassword" method="POST">
+      <label for="password">Password</label>
+      <input type="password" name="password">
+      <label for="new-password">New Password</label>
+      <input type="password" name="newPassword" id="newPassword">
+      <label for="new-password2">Confirm Password</label>
+      <input type="password" name="newPassword2" id="newPassword2">
+      <input type="hidden" name="id" value=<%= user.id %>>
+      <button type="submit">Change password</button>
+    </form>
   </body>
 </html>
