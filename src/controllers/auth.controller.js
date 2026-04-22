@@ -33,10 +33,20 @@ const login = async (req, res) => {
   }
 };
 
-const logout = (_req, res) => {
+const logout = ( req, res) => {
   res.clearCookie("accessToken", accessTokenCookieOptions);
   return res.status(200).json({ message: "Sesion cerrada" });
 };
+
+const updatePassword = async (req, res) => {
+  try {
+    const user = await authService.updatePassword(req.body)
+    res.render("pages/users", {message: "Password changed successfully", user})
+
+  } catch(error) {
+    res.render("pages/users", {message: error.message})
+  }
+}
 
 const showRegister = (_req, res) => {
   res.render("pages/register", { message: "" });
@@ -50,6 +60,7 @@ module.exports = {
   register,
   login,
   logout,
+  updatePassword,
   showRegister,
   showLogin,
 };
