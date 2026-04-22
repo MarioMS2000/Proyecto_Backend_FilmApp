@@ -1,4 +1,4 @@
-const usersController = {
+const userController = {
   index(req, res) {
     res.render("pages/users");
   },

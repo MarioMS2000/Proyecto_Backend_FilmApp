@@ -1,6 +1,6 @@
 const express = require("express");
 const { getAllUsers,
-    reateUser,
+    createUser,
     updateUserByAdmin,
     deleteUser,
     getProfile,
@@ -12,14 +12,12 @@ const router = express.Router();
 
 // User
 router.get("/", requireAuth, getProfile);
-router.get("/", requireAuth, updateProfile);
+router.put("/", requireAuth, updateProfile);
 
 // Admin
 router.get("/all", requireAuth, requireRole("admin"), getAllUsers);
-router.get("/all", requireAuth, requireRole("admin"), createUser);
-router.get("/all", requireAuth, requireRole("admin"), updateUserByAdmin);
-router.get("/all", requireAuth, requireRole("admin"), deleteUser);
-
-
+router.post("/", requireAuth, requireRole("admin"), createUser);
+router.put("/:id", requireAuth, requireRole("admin"), updateUserByAdmin);
+router.delete("/:id", requireAuth, requireRole("admin"), deleteUser);
 
 module.exports = router;

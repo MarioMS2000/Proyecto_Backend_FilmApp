@@ -38,7 +38,7 @@ app.use("/", webRoutes);
 
 // Api
 app.use("/api", authRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/movie", movieRoutes);
 app.use("/api/favorites", favoritesRoutes);
 
