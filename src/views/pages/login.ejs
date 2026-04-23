@@ -7,16 +7,35 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Login</h1>
+    <main class="auth-shell">
+      <section class="auth-card">
+        <span class="landing-kicker">Acceso</span>
+        <h1>Inicia sesion</h1>
+        <p class="auth-copy">Entra para seguir explorando peliculas y acceder a tus vistas privadas.</p>
 
-    <form action="/api/login" method="post">
-      <label for="email">Email</label>
-      <input type="text" name="email" id="email" required>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p><%= message %></p>
-    <a href="/signup">Register</a>
+        <form class="auth-form" action="/api/login" method="post">
+          <label for="email">
+            Email
+            <input type="text" name="email" id="email" required>
+          </label>
+
+          <label for="password">
+            Password
+            <input type="password" name="password" id="password" required>
+          </label>
+
+          <button class="landing-button landing-button-primary" type="submit">Entrar</button>
+        </form>
+
+        <% if (message) { %>
+          <p class="auth-message"><%= message %></p>
+        <% } %>
+
+        <div class="auth-links">
+          <a class="landing-button landing-button-secondary" href="/signup">Registrarse</a>
+          <a class="landing-button landing-button-secondary" href="/">Volver</a>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
