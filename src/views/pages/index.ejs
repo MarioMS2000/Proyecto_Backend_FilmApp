@@ -3,12 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Movie App</title>
+    <title>Film App</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Inicio Movie App</h1>
-    <a href="/login">Login</a>
-    <a href="/profile">Profile</a>
+    <main class="landing-shell">
+      <section class="landing-card">
+        <div class="landing-main">
+          <span class="landing-kicker">Film App</span>
+          <h1>Tu proxima obsesion cinematografica empieza aqui.</h1>
+          <p class="landing-copy">
+            Descubre peliculas y guarda tus favoritas.
+          </p>
+
+          <div class="landing-actions">
+            <a class="landing-button landing-button-primary" href="/login">Entrar</a>
+            <a class="landing-button landing-button-secondary" href="/signup">Registrarse</a>
+          </div>
+        </div>
+
+        <aside class="landing-sidebar">
+          <p class="sidebar-label">Destacada de hoy</p>
+          <div class="sidebar-poster-wrap">
+            <img
+              class="sidebar-poster"
+              src="<%= featuredMovie.poster %>"
+              alt="Poster de <%= featuredMovie.title %>"
+            />
+          </div>
+          <div class="sidebar-m">
+            <h2><%= featuredMovie.title %></h2>
+            <p><%= featuredMovie.year %> · <%= featuredMovie.genre %></p>
+          </div>
+        </aside>
+      </section>
+    </main>
   </body>
 </html>
