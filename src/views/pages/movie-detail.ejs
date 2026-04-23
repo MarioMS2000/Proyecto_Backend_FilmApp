@@ -3,12 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detalle de película</title>
+    <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Detalle de película</h1>
-    <p>Título: <%= title %></p>
-    <p>Vista pendiente de desarrollo.</p>
+    <h1><%= movie.title %></h1>
+    <p>Detalle de película</p>
+    <a href="/movies">Volver</a>
+    <main>
+      <img src="<%= movie.poster %>" width="200" />
+      <p>Año: <%= movie.year %></p>
+      <p>Director: <%= movie.director %></p>
+      <p>Género: <%= movie.genre %></p>
+      <p>Duración: <%= movie.duration %></p>
+      <p>Plot: <%= movie.plot %></p>
+      <p>Actores: <%= Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors %></p>
+      <p>Rating: <%= movie.rating %></p>
+    
+      <h2>Reviews</h2>
+    
+      <% if (reviewsError) { %>
+        <p><%= reviewsError %></p>
+        <% } else if(!movie.reviews || movie.reviews.length===0) { %>
+        <p>No hay reviews</p>
+      <% } else { %>
+          <% movie.reviews.forEach(review=> { %>
+            <section>
+              <p>Autor: <%= review.author %></p>
+              <p>Rating: <%= review.rating %></p>
+              <p><%= review.review %></p>
+            </section>
+          <% }) %>
+        <% } %>
+    </main>
   </body>
 </html>
