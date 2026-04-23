@@ -9,9 +9,9 @@ const router = express.Router();
 
 // Publicas
 router.get("/", viewsController.home);
-router.get("/login", viewsController.login);
-router.get("/signup", viewsController.signup);
-router.get("/restorepassword", viewsController.restorePassword);
+router.get("/login", authController.login);
+router.get("/signup", authController.register);
+// router.get("/restorepassword", authController.restorePassword);
 
 // Privadas
 router.get("/dashboard", requireAuth, viewsController.dashboard);
