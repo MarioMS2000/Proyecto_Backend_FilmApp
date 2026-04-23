@@ -8,6 +8,8 @@
   </head>
   <body>
     <h1>Usuarios</h1>
+    <a href="/admin-create-user">Create user</a>
+
     <table>
       <th>Name</th>
       <th>Email</th>
@@ -32,12 +34,15 @@
               <td><button type="submit">Edit</button></td>
             </form>
           
-            <form action="/api/user/deleteUser" method="post">
-              <td>
-                <input type="hidden" name="id" value=<%= user.id %>>
-                <button type="submit">Delete</button>
-              </td>
-            </form>
+            <% if (user.role !== 'admin') { %>
+              <form action="/api/user/deleteUser" method="post">
+                <td>
+                  <input type="hidden" name="id" value=<%= user.id %>>
+                  <button type="submit">Delete</button>
+                </td>
+              </form>
+            <% } %>
+            
             
             
           </tr>
