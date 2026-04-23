@@ -1,3 +1,4 @@
+const Movie = require("../models/mongo/Movie");
 const User = require("../models/sql/User");
 const { getRandomMovies } = require("../services/movie.service");
 
@@ -60,6 +61,24 @@ const viewsController = {
 
   movies(req, res) {
     res.render("pages/movies", { user: req.user });
+  },
+
+  async adminMovies(req, res) {
+    const movies = await Movie.find()
+    res.render("pages/admin-movies", { movies });
+  },
+
+  async adminEditMovie(req, res) {
+    const movie = await Movie.findById(req.params.id)
+    res.render('pages/admin-edit-movie', {movie})
+  },
+
+  adminCreateMovie(req, res) {
+    res.render('pages/admin-create-movie')
+  },
+
+  adminCreateUser(req, res) {
+    res.render('pages/admin-create-user', {message: ""})
   },
 
   search(req, res) {

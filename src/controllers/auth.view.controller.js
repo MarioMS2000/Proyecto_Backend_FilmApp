@@ -6,7 +6,7 @@ const register = async (req, res) => {
   try {
     const user = await authService.register(req.body);
 
-    return res.status(201).render("pages/login", {
+    return res.render("pages/login", {
       message: "User registered successfully",
       user: {
         id: user.id,
@@ -55,9 +55,20 @@ const restorePassword = async (req, res) => {
   }
 };
 
+const adminCreateUser = async (req, res) => {
+  try {
+    const user = await authService.register(req.body);
+
+    return res.redirect("/users");
+  } catch (error) {
+    return res.render("pages/register", { message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   restorePassword,
+  adminCreateUser
 };

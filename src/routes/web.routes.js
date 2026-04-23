@@ -2,6 +2,8 @@ const express = require("express");
 const viewsController = require("../controllers/views.controller");
 const { requireAuth } = require("../middlewares/auth.middleware");
 const { requireRole } = require("../middlewares/role.middleware");
+const movieController = require('../controllers/movie.view.controller')
+const authController = require('../controllers/auth.view.controller')
 
 const router = express.Router();
 
@@ -22,5 +24,15 @@ router.get("/search/:title", requireAuth, requireRole("user"), viewsController.m
 
 // Admin
 router.get("/users", requireAuth, requireRole("admin"), viewsController.users);
+router.get("/admin-movies", requireAuth, requireRole("admin"), viewsController.adminMovies)
+router.get("/admin-movies/:id", requireAuth, requireRole("admin"), viewsController.adminEditMovie)
+router.get("/admin-create-movie", requireAuth, requireRole("admin"), viewsController.adminCreateMovie)
+router.get("/admin-create-user", requireAuth, requireRole("admin"), viewsController.adminCreateUser)
+router.post("/admin-movies/:id", requireAuth, requireRole("admin"), movieController.updateMovie)
+router.post("/admin-movies/delete/:id", requireAuth, requireRole("admin"), movieController.deleteMovie)
+router.post("/admin-create-movie", requireAuth, requireRole("admin"), movieController.createMovie)
+router.post("/admin-create-user", requireAuth, requireRole("admin"), authController.adminCreateUser)
+
+
 
 module.exports = router;
