@@ -8,17 +8,42 @@
   </head>
   <body>
     <h1>Usuarios</h1>
-    <p><%= user.email %></p>
-    <p><%= user.name %></p>
-    <form action="/updatePassword" method="POST">
-      <label for="password">Password</label>
-      <input type="password" name="password">
-      <label for="new-password">New Password</label>
-      <input type="password" name="newPassword" id="newPassword">
-      <label for="new-password2">Confirm Password</label>
-      <input type="password" name="newPassword2" id="newPassword2">
-      <input type="hidden" name="id" value=<%= user.id %>>
-      <button type="submit">Change password</button>
-    </form>
+    <table>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <form action="/api/user/updateRole" method="post">
+              <td>
+                <select name="role" id="role">
+                <% if (user.role === "admin") { %>
+                  <option value="user">user</option>
+                  <option value="admin" selected>admin</option>
+                <% } else { %>
+                  <option value="user" selected>user</option>
+                  <option value="admin">admin</option>
+                <% } %>
+                </select>
+              </td>
+              <input type="hidden" name="id" value=<%= user.id %>>
+              <td><button type="submit">Edit</button></td>
+            </form>
+          
+            <form action="/api/user/deleteUser" method="post">
+              <td>
+                <input type="hidden" name="id" value=<%= user.id %>>
+                <button type="submit">Delete</button>
+              </td>
+            </form>
+            
+            
+          </tr>
+        <% }) %>
+    </table>
+     
+   
   </body>
 </html>
