@@ -12,6 +12,7 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const movieRoutes = require("./routes/movie.routes");
 const favoritesRoutes = require("./routes/favorites.routes");
+const movieViewRoutes = require("./routes/movieHome.views.routes");
 
 // Middelwares/Docs
 const swaggerSpec = require("./config/swagger")
@@ -35,6 +36,7 @@ app.use(cookieParser())
 
 // Web
 app.use("/", webRoutes);
+app.use("/", movieViewRoutes);
 
 // Api
 app.use("/api", authRoutes);

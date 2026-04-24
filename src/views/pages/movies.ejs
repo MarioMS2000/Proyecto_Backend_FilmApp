@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Peliculas</title>
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
-  <body>
-    <h1>Peliculas</h1>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= pageTitle %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <nav>
+    <a href="/movies">Películas</a>
+    <a href="/favorites">Favoritos</a>
+  </nav>
+  <main class="movies-page">
+    <!-- BUSCADOR -->
+    <section class="card">
+      <h2>Buscar película</h2>
+      <form method="GET" action="/movies">
+        <input name="title" type="text" placeholder="Buscar..." />
+        <button type="submit">Buscar</button>
+      </form>
+    </section>
+
+    <!-- MENSAJE ERROR SI NO ENCUENTRA PELI-->
+    <% if (error) { %>
+      <section class="card">
+        <p><%= error %></p>
+      </section>
+      <% } %>
+        <!-- LISTA DE PELÍCULAS -->
+        <section class="card">
+          <h2>Películas</h2>
+
+          <% if (!movies || movies.length===0) { %>
+            <p>No hay películas disponibles</p>
+            <% } else { %>
+
+              <section class="movies-grid">
+
+                <% movies.forEach(movie=> { %>
+                  <article class="movie-card">
+                    <img src="<%= movie.poster %>" alt="<%= movie.title %>" width="150" />
+                    <h3><%= movie.title %></h3>
+                    <p>Año:<%= movie.year %></p>
+                    <p>Director:<%= movie.director %></p>
+                    <p>Género:<%= movie.genre %></p>
+                    <p>Duración:<%= movie.duration %></p>
+                    <!--btn favoritos - para guardar peli-->
+                    <!-- LINK DETALLE DE PELI -->
+                    <a href="/movies/<%= movie.imdbID %>">Ver detalles</a>
+                  </article>
+                <% }) %>
+            <% } %>
+              </section>
+        </section>
+  </main>
+</body>
+
 </html>
