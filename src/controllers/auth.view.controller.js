@@ -6,15 +6,7 @@ const register = async (req, res) => {
   try {
     const user = await authService.register(req.body);
 
-    return res.render("pages/login", {
-      message: "User registered successfully",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    return res.redirect("/login");
   } catch (error) {
     return res.render("pages/register", { message: error.message });
   }
@@ -35,7 +27,7 @@ const login = async (req, res) => {
 
 const logout = ( req, res) => {
   res.clearCookie("accessToken", accessTokenCookieOptions);
-  return res.status(200).json({ message: "Sesion cerrada" });
+  return res.rendirect("/");
 };
 
 const restorePassword = async (req, res) => {
