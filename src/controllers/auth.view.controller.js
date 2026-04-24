@@ -27,7 +27,7 @@ const login = async (req, res) => {
 
 const logout = ( req, res) => {
   res.clearCookie("accessToken", accessTokenCookieOptions);
-  return res.rendirect("/");
+  return res.redirect("/");
 };
 
 const restorePassword = async (req, res) => {
