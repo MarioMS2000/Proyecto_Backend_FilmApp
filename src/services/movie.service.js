@@ -28,7 +28,6 @@ const POPULAR_TITLES = [
   "Back to the Future",
   "Rocky",
   "Scarface",
-  "Casino",
   "The Wolf of Wall Street",
   "Django",
   "La La Land",
