@@ -4,13 +4,13 @@ const {
   login,
   logout,
   restorePassword,
-} = require("../controllers/auth.view.controller");
+} = require("../controllers/auth.controller");
 
 const router = express.Router();
 
 router.post("/signup", register);
 router.post("/login", login);
 router.post("/logout", logout);
-router.post("/restorepassword", restorePassword);
+router.put("/restorepassword", restorePassword);
 
 module.exports = router;

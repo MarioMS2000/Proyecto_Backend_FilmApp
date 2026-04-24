@@ -34,6 +34,8 @@ router.post("/admin-movies/:id", requireAuth, requireRole("admin"), movieControl
 router.post("/admin-movies/delete/:id", requireAuth, requireRole("admin"), movieController.deleteMovie)
 router.post("/admin-create-movie", requireAuth, requireRole("admin"), movieController.createMovie)
 router.post("/admin-create-user", requireAuth, requireRole("admin"), authController.adminCreateUser)
+router.post("/updateRole", requireAuth, requireRole("admin"), viewsController.updateUserByAdmin);
+router.post("/deleteUser", requireAuth, requireRole("admin"), viewsController.deleteUser);
 
 
 

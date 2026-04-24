@@ -1,6 +1,7 @@
 const Movie = require("../models/mongo/Movie");
 const User = require("../models/sql/User");
 const { getRandomMovies } = require("../services/movie.service");
+const userService = require('../services/user.service')
 
 const fallbackMovie = {
   title: "Film App",
@@ -96,6 +97,17 @@ const viewsController = {
     const users = await User.findAll()
     res.render("pages/users", { users });
   },
+
+  async deleteUser(req, res) {
+    const deleted = await userService.deleteUser(req.body)
+    return res.redirect('/users')
+  },
+
+  async updateUserByAdmin(req, res) {
+    const user = await userService.updateUser(req.body)
+
+    return res.redirect('/users')
+  }
 };
 
 module.exports = viewsController;

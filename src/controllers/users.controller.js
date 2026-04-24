@@ -14,8 +14,9 @@ const updateProfile = (req, res) => {
   });
 };
 
-const getAllUsers = (_req, res) => {
-  return res.status(200).json(userService.getAllUsers());
+const getAllUsers = async ( req, res) => {
+  const users = await userService.getAllUsers()
+  return res.status(200).json(users);
 };
 
 const createUser = (req, res) => {
@@ -25,22 +26,13 @@ const createUser = (req, res) => {
   });
 };
 
-const updateUserByAdmin = (req, res) => {
-  const user = userService.updateUser(req.body)
 
-  return res.redirect('/users')
-};
 
-const deleteUser = async (req, res) => {
-  const deleted = await userService.deleteUser(req.body)
-  return res.redirect('/users')
-};
+
 
 module.exports = {
   getProfile,
   updateProfile,
   getAllUsers,
   createUser,
-  updateUserByAdmin,
-  deleteUser,
 };
