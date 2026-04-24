@@ -18,7 +18,7 @@ router.post("/signup", authController.register);
 // Privadas
 router.get("/dashboard", requireAuth, viewsController.dashboard);
 router.get("/profile", requireAuth, viewsController.profile);
-router.get("/movies", requireAuth, viewsController.movies);
+router.get("/movies", requireAuth, movieController.showMovies);
 
 // Usuario
 router.get("/search", requireAuth, requireRole("user"), viewsController.search);
