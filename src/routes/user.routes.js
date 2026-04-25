@@ -19,7 +19,6 @@ router.put("/", requireAuth, updateProfile);
 // Admin
 router.get("/all", requireAuth, requireRole("admin"), getAllUsers);
 router.post("/", requireAuth, requireRole("admin"), createUser);
-router.post("/updateRole", requireAuth, requireRole("admin"), updateUserByAdmin);
-router.post("/deleteUser", requireAuth, requireRole("admin"), deleteUser);
+
 
 module.exports = router;

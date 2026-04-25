@@ -41,6 +41,7 @@ app.use("/", movieViewRoutes);
 // Api
 app.use("/api", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/movie", movieRoutes);
 app.use("/api/favorites", favoritesRoutes);
 

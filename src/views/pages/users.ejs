@@ -18,7 +18,7 @@
           <tr>
             <td><%= user.name %></td>
             <td><%= user.email %></td>
-            <form action="/api/user/updateRole" method="post">
+            <form action="/updateRole" method="post">
               <td>
                 <select name="role" id="role">
                 <% if (user.role === "admin") { %>
@@ -35,7 +35,7 @@
             </form>
           
             <% if (user.role !== 'admin') { %>
-              <form action="/api/user/deleteUser" method="post">
+              <form action="/deleteUser" method="post">
                 <td>
                   <input type="hidden" name="id" value=<%= user.id %>>
                   <button type="submit">Delete</button>

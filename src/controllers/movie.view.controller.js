@@ -5,81 +5,42 @@ const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/m
 const Movie = require("../models/mongo/Movie");
 
 //USERS buscar peli
-const searchMovies = async (req, res) => {
-  try {
-    const title = req.query.title;
+const showMovies = async (req, res) => {
+  //búsqueda desde URL, API, sino en mongo
+  const title = req.query.title;
+  let movies = [];
 
-    if (!title) {
-      return res.status(400).json({
-        message: "El título es requerido",
-      });
-    }
-    const movies = await searchMovie(title);
+  if (title) {
+    const results = await searchMovie(title);
 
-    const response = movies.map((movie) => {
-      return {
-        title: movie.title || movie.Title,
-        poster: movie.poster || movie.Poster,
-        year: movie.year || movie.Year,
-        director: movie.director || movie.Director,
-        genre: movie.genre || movie.Genre,
-        duration: movie.duration || movie.Runtime,
-      };
-    });
-    return res.status(200).json(response);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error buscando películas",
-    });
-  }
-};
-
-//añadir el ranting
-const getMovieByTitle = async (req, res) => {
-  try {
-    const title = req.params.title;
-    const movies = await searchMovie(title);
-
-    if (!movies || movies.length === 0) {
-      return res.status(404).json({
-        message: "Película no encontrada",
-      });
-    }
-    const movie = movies[0];
-
-    const reviews = await getMovieReviews(movie.title || movie.Title);
-
-    const response = {
+    movies = results.map((movie) => ({
       title: movie.title || movie.Title,
       poster: movie.poster || movie.Poster,
       year: movie.year || movie.Year,
       director: movie.director || movie.Director,
       genre: movie.genre || movie.Genre,
       duration: movie.duration || movie.Runtime,
-      plot: movie.plot || movie.Plot,
-      actors: movie.actors || movie.Actors,
-      rating: movie.imdbRating,
-      reviews,
-    };
-    return res.status(200).json(response);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error obteniendo detalle de película",
-    });
-  }
-};
-//admin get movies
-const getAllMovies = async (req, res) => {
-  try {
-    const movies = await Movie.find();
-    return res.status(200).json(movies);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error obteniendo películas",
-    });
-  }
-};
+      imdbID: movie.imdbID,
+    }));
+  } else {
+    const randomMovies = await getRandomMovies();
 
+    movies = randomMovies.map((movie) => ({
+      title: movie.title || movie.Title,
+      poster: movie.poster || movie.Poster,
+      year: movie.year || movie.Year,
+      director: movie.director || movie.Director,
+      genre: movie.genre || movie.Genre,
+      duration: movie.duration || movie.Runtime,
+      imdbID: movie.imdbID,
+    }));
+  }
+  return res.render("pages/movies", {
+    pageTitle: "Películas",
+    movies,
+    error: ""
+  });
+};
 const createMovie = async (req, res) => {
   try {
     const movie = await Movie.create(req.body);
@@ -148,9 +109,7 @@ const getRandomMoviesController = async (req, res) => {
   }
 };
 module.exports = {
-  searchMovies,
-  getMovieByTitle,
-  getAllMovies,
+  showMovies,
   createMovie,
   updateMovie,
   deleteMovie,
