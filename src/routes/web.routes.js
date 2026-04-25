@@ -4,6 +4,7 @@ const { requireAuth } = require("../middlewares/auth.middleware");
 const { requireRole } = require("../middlewares/role.middleware");
 const movieController = require('../controllers/movie.view.controller')
 const authController = require('../controllers/auth.view.controller')
+const favoriteViewController = require('../controllers/favorite.view.controller')
 
 const router = express.Router();
 
@@ -19,6 +20,9 @@ router.post("/signup", authController.register);
 router.get("/dashboard", requireAuth, viewsController.dashboard);
 router.get("/profile", requireAuth, viewsController.profile);
 router.get("/movies", requireAuth, viewsController.movies);
+router.get("/favorites", requireAuth, favoriteViewController.favorites);
+router.post("/favorites", requireAuth, favoriteViewController.addFavorite);
+router.post("/favorites/:id/delete", requireAuth, favoriteViewController.removeFavorite);
 
 // Usuario
 router.get("/search", requireAuth, requireRole("user"), viewsController.search);
