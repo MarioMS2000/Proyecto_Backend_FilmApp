@@ -13,6 +13,7 @@ const showMovies = async (req, res) => {
   //búsqueda desde URL, API, sino en mongo
   const title = req.query.title;
   let movies = [];
+  //si el usuario busca y muestra resultados
   const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
 
   if (title) {
@@ -30,6 +31,7 @@ const showMovies = async (req, res) => {
       sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
     }));
   } else {
+    //si no busca por título, muestra aleatorias
     const randomMovies = await getRandomMovies();
 
     movies = randomMovies.map((movie) => ({
@@ -55,9 +57,10 @@ const showMovies = async (req, res) => {
 
 // detalles de la pelí
 const showMovieDetail = async (req, res) => {
-    const imdbID = req.params.id;
-    
-    if (!imdbID) return res.redirect("/movies");
+  // Obtiene el ID de la película desde la URL
+  const imdbID = req.params.id;
+  //Si no hay ID vuelve al listado de películas
+  if (!imdbID) return res.redirect("/movies");
 
     const movie = await getMovieByIdService(imdbID);
     const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
