@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
+
+    <main class="page-shell">
+      <section class="page-heading">
+        <span class="landing-kicker">Panel</span>
+        <h1>Dashboard</h1>
+        <p>Accede rapido a las secciones principales.</p>
+      </section>
+
+      <section class="action-grid">
+        <a class="panel action-panel" href="/movies">
+          <h2>Peliculas</h2>
+          <p>Buscar peliculas y añadir favoritas.</p>
+        </a>
+        <a class="panel action-panel" href="/favorites">
+          <h2>Favoritos</h2>
+          <p>Ver y eliminar peliculas guardadas.</p>
+        </a>
+        <a class="panel action-panel" href="/profile">
+          <h2>Perfil</h2>
+          <p>Consultar datos y cambiar contraseña.</p>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>

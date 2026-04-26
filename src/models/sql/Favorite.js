@@ -1,11 +1,11 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/db.sql");
 
-const Favorite = sequelize.connectSql().define(
+const Favorite = sequelize.define(
     "Favorite",
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
         user_id: {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar <%= movie.title %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
+
+    <main class="page-shell narrow">
+      <section class="page-heading">
+        <span class="landing-kicker">Admin</span>
+        <h1>Editar pelicula</h1>
+        <p>Actualiza los datos de <%= movie.title %>.</p>
+      </section>
+
+      <form class="panel stacked-form" action="/admin/movies/<%= movie.id %>" method="POST">
+        <label for="title">Titulo</label>
+        <input type="text" name="title" id="title" value="<%= movie.title %>" required>
+
+        <label for="poster">Poster</label>
+        <input type="url" name="poster" id="poster" value="<%= movie.poster %>" required>
+
+        <label for="year">Año</label>
+        <input type="text" name="year" id="year" value="<%= movie.year %>" required>
+
+        <label for="director">Director</label>
+        <input type="text" name="director" id="director" value="<%= movie.director %>" required>
+
+        <label for="genre">Genero</label>
+        <input type="text" name="genre" id="genre" value="<%= movie.genre %>" required>
+
+        <label for="duration">Duracion</label>
+        <input type="text" name="duration" id="duration" value="<%= movie.duration %>">
+
+        <label for="plot">Sinopsis</label>
+        <textarea name="plot" id="plot"><%= movie.plot %></textarea>
+
+        <div class="form-actions">
+          <a class="landing-button landing-button-secondary" href="/admin/movies">Cancelar</a>
+          <button class="landing-button landing-button-primary" type="submit">Guardar cambios</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

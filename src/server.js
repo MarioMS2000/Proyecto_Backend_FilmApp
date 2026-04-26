@@ -3,11 +3,11 @@ const app = require("./app");
 const sequelize = require("./config/db.sql");
 require("./models/sql");
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 async function startServer() {
   try {
-    await sequelize.connectSql();
+    await sequelize.authenticate();
     console.log("Conexion a PostgreSQL establecida correctamente");
 
     app.listen(PORT, () => {
