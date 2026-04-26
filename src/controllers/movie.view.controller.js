@@ -1,12 +1,19 @@
 const { getMovieReviews } = require("../services/scraping.service");
 const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/movie.service");
+const favoritesService = require("../services/favorites.service");
 const Movie = require("../models/mongo/Movie");
+
+const getFavoriteMovieIds = async (userId) => {
+  const favorites = await favoritesService.getAllFavoritesMovies(userId);
+  return favorites.map((favorite) => favorite.sourceMovieId);
+};
 
 //USERS buscar peli
 const showMovies = async (req, res) => {
   //búsqueda desde URL, API, sino en mongo
   const title = req.query.title;
   let movies = [];
+  const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
 
   if (title) {
     const results = await searchMovie(title);
@@ -38,7 +45,10 @@ const showMovies = async (req, res) => {
   }
   return res.render("pages/movies", {
     pageTitle: "Películas",
+    user: req.user,
     movies,
+    favoriteMovieIds,
+    currentUrl: req.originalUrl,
     error: ""
   });
 };
@@ -50,11 +60,15 @@ const showMovieDetail = async (req, res) => {
     if (!imdbID) return res.redirect("/movies");
 
     const movie = await getMovieByIdService(imdbID);
+    const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
 
     if(!movie){
        return res.render("pages/movies", {
          pageTitle: "Películas",
+         user: req.user,
          movies: [],
+         favoriteMovieIds,
+         currentUrl: "/movies",
          error: "No se encontró la película",
        });
     }
@@ -81,10 +95,28 @@ const showMovieDetail = async (req, res) => {
     };
     return res.render("pages/movie-detail", {
       pageTitle: response.title,
+      user: req.user,
       movie: response,
+      isFavorite: favoriteMovieIds.includes(response.imdbID),
+      currentUrl: req.originalUrl,
       reviewsError,
     });
 };
+
+const showAdminMovies = async (req, res) => {
+  const movies = await Movie.find();
+  return res.render("pages/admin-movies", { user: req.user, movies });
+};
+
+const showAdminEditMovie = async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  return res.render("pages/admin-edit-movie", { user: req.user, movie });
+};
+
+const showAdminCreateMovie = (req, res) => {
+  return res.render("pages/admin-create-movie", { user: req.user });
+};
+
 const createMovie = async (req, res) => {
   try {
     const movie = await Movie.create(req.body);
@@ -155,6 +187,9 @@ const getRandomMoviesController = async (req, res) => {
 module.exports = {
   showMovies,
   showMovieDetail,
+  showAdminMovies,
+  showAdminEditMovie,
+  showAdminCreateMovie,
   createMovie,
   updateMovie,
   deleteMovie,

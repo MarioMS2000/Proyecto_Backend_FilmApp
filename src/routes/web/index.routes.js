@@ -5,6 +5,7 @@ const { requireWebRole } = require("../../middlewares/role.middleware");
 const movieController = require('../../controllers/movie.view.controller')
 const authController = require('../../controllers/auth.view.controller')
 const favoriteViewController = require('../../controllers/favorite.view.controller')
+const userViewController = require("../../controllers/user.view.controller");
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.get("/login", viewsController.login);
 router.get("/signup", viewsController.signup);
 router.post("/login", authController.login);
 router.post("/signup", authController.register);
+router.post("/logout", authController.logout);
 // router.get("/restorepassword", authController.restorePassword);
 
 // Privadas
@@ -27,15 +29,15 @@ router.post("/favorites/:id/delete", requireWebAuth, favoriteViewController.remo
 router.get("/movies/:id", requireWebAuth, movieController.showMovieDetail);
 
 // Admin
-router.get("/admin/users", requireWebAuth, requireWebRole("admin"), viewsController.users);
-router.get("/admin/users/new", requireWebAuth, requireWebRole("admin"), viewsController.adminCreateUser)
+router.get("/admin/users", requireWebAuth, requireWebRole("admin"), userViewController.showUsers);
+router.get("/admin/users/new", requireWebAuth, requireWebRole("admin"), userViewController.showCreateUser)
 router.post("/admin/users", requireWebAuth, requireWebRole("admin"), authController.adminCreateUser)
-router.post("/admin/users/:id/role", requireWebAuth, requireWebRole("admin"), viewsController.updateUserByAdmin);
-router.post("/admin/users/:id/delete", requireWebAuth, requireWebRole("admin"), viewsController.deleteUser);
-router.get("/admin/movies", requireWebAuth, requireWebRole("admin"), viewsController.adminMovies)
-router.get("/admin/movies/new", requireWebAuth, requireWebRole("admin"), viewsController.adminCreateMovie)
+router.post("/admin/users/:id/role", requireWebAuth, requireWebRole("admin"), userViewController.updateUserRole);
+router.post("/admin/users/:id/delete", requireWebAuth, requireWebRole("admin"), userViewController.deleteUser);
+router.get("/admin/movies", requireWebAuth, requireWebRole("admin"), movieController.showAdminMovies)
+router.get("/admin/movies/new", requireWebAuth, requireWebRole("admin"), movieController.showAdminCreateMovie)
 router.post("/admin/movies", requireWebAuth, requireWebRole("admin"), movieController.createMovie)
-router.get("/admin/movies/:id/edit", requireWebAuth, requireWebRole("admin"), viewsController.adminEditMovie)
+router.get("/admin/movies/:id/edit", requireWebAuth, requireWebRole("admin"), movieController.showAdminEditMovie)
 router.post("/admin/movies/:id", requireWebAuth, requireWebRole("admin"), movieController.updateMovie)
 router.post("/admin/movies/:id/delete", requireWebAuth, requireWebRole("admin"), movieController.deleteMovie)
 

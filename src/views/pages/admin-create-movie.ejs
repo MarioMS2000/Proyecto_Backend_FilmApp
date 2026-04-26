@@ -1,34 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Create Movie</h1>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear pelicula</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
 
-  <form action="/admin/movies" method="post">
-    <label for="title">Title</label>
-    <input type="text" name="title" >
-    <label for="poster">Image</label>
-    <input type="text" name="poster">
-    <label for="year">Year</label>
-    <input type="text" name="year">
-    <label for="director">Director</label>
-    <input type="text" name="director">
-    <label for="genre">Genre</label>
-    <input type="text" name="genre">
-    <label for="duration">Duration</label>
-    <input type="text" name="duration">
-    <label for="plot">Plot</label>
-    <textarea name="plot" ></textarea>
-    <label for="actors">Actors</label>
-    <input type="text" name="actors">
-    <label for="imdbRating">Rating</label>
-    <input type="text" name="imdbRating">
-    <input type="hidden" name="source" value="mongo">
-    <button type="submit">Create</button>
-  </form>
-</body>
+    <main class="page-shell narrow">
+      <section class="page-heading">
+        <span class="landing-kicker">Admin</span>
+        <h1>Crear pelicula</h1>
+        <p>Completa los datos para añadir una pelicula propia.</p>
+      </section>
+
+      <form class="panel stacked-form" action="/admin/movies" method="POST">
+        <label for="title">Titulo</label>
+        <input type="text" name="title" id="title" required>
+
+        <label for="poster">Poster</label>
+        <input type="url" name="poster" id="poster" required>
+
+        <label for="year">Año</label>
+        <input type="text" name="year" id="year" required>
+
+        <label for="director">Director</label>
+        <input type="text" name="director" id="director" required>
+
+        <label for="genre">Genero</label>
+        <input type="text" name="genre" id="genre" required>
+
+        <label for="duration">Duracion</label>
+        <input type="text" name="duration" id="duration">
+
+        <label for="plot">Sinopsis</label>
+        <textarea name="plot" id="plot"></textarea>
+
+        <label for="actors">Actores</label>
+        <input type="text" name="actors" id="actors">
+
+        <label for="imdbRating">Rating</label>
+        <input type="text" name="imdbRating" id="imdbRating">
+
+        <input type="hidden" name="source" value="mongo">
+
+        <div class="form-actions">
+          <a class="landing-button landing-button-secondary" href="/admin/movies">Cancelar</a>
+          <button class="landing-button landing-button-primary" type="submit">Crear pelicula</button>
+        </div>
+      </form>
+    </main>
+  </body>
 </html>
