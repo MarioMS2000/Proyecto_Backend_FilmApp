@@ -23,7 +23,7 @@ router.get("/movies", requireAuth, movieController.showMovies);
 router.get("/favorites", requireAuth, favoriteViewController.favorites);
 router.post("/favorites", requireAuth, favoriteViewController.addFavorite);
 router.post("/favorites/:id/delete", requireAuth, favoriteViewController.removeFavorite);
-
+router.get("/movies/:id", requireAuth, movieController.showMovieDetail);
 
 // Usuario
 router.get("/search", requireAuth, requireRole("user"), viewsController.search);

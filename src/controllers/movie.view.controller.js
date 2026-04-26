@@ -1,5 +1,3 @@
-
-
 const { getMovieReviews } = require("../services/scraping.service");
 const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/movie.service");
 const Movie = require("../models/mongo/Movie");
@@ -40,6 +38,47 @@ const showMovies = async (req, res) => {
     movies,
     error: ""
   });
+};
+
+// detalles de la pelí
+const showMovieDetail = async (req, res) => {
+    const imdbID = req.params.id;
+    
+    if (!imdbID) return res.redirect("/movies");
+
+    const movie = await getMovieByIdService(imdbID);
+
+    if(!movie){
+       return res.render("pages/movies", {
+         pageTitle: "Películas",
+         movies: [],
+         error: "No se encontró la película",
+       });
+    }
+    let reviews = [];
+    let reviewsError = null;
+    try {
+      reviews = await getMovieReviews(movie.title || movie.Title);
+    } catch (error) {
+      reviewsError = "No se pudieron cargar las reviews";
+    }
+    const response = {
+      title: movie.title || movie.Title,
+      poster: movie.poster || movie.Poster,
+      year: movie.year || movie.Year,
+      director: movie.director || movie.Director,
+      genre: movie.genre || movie.Genre,
+      duration: movie.duration || movie.Runtime,
+      plot: movie.plot || movie.Plot,
+      actors: movie.actors || movie.Actors,
+      rating: movie.imdbRating,
+      reviews,
+    };
+    return res.render("pages/movie-detail", {
+      pageTitle: response.title,
+      movie: response,
+      reviewsError,
+    });
 };
 const createMovie = async (req, res) => {
   try {
@@ -110,6 +149,7 @@ const getRandomMoviesController = async (req, res) => {
 };
 module.exports = {
   showMovies,
+  showMovieDetail,
   createMovie,
   updateMovie,
   deleteMovie,
