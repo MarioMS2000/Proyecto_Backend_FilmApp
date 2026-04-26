@@ -52,7 +52,10 @@ const adminCreateUser = async (req, res) => {
 
     return res.redirect("/admin/users");
   } catch (error) {
-    return res.render("pages/register", { message: error.message });
+    return res.render("pages/admin-create-user", {
+      user: req.user,
+      message: error.message,
+    });
   }
 };
 

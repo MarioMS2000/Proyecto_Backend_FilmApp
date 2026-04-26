@@ -1,0 +1,31 @@
+<header class="app-header">
+  <a class="brand" href="/movies">Film App</a>
+
+  <% if (typeof user !== "undefined" && user) { %>
+    <nav class="main-nav" aria-label="Navegacion principal">
+      <a href="/movies">Peliculas</a>
+      <a href="/favorites">Favoritos</a>
+      <a href="/profile">Perfil</a>
+
+      <% if (user.role === "admin") { %>
+        <details class="admin-menu">
+          <summary aria-label="Abrir menu de administracion">
+            <span></span>
+            <span></span>
+            <span></span>
+          </summary>
+          <div class="admin-menu-panel">
+            <a href="/admin/users">Administrar usuarios</a>
+            <a href="/admin/users/new">Crear usuario</a>
+            <a href="/admin/movies">Editar peliculas</a>
+            <a href="/admin/movies/new">Crear pelicula</a>
+          </div>
+        </details>
+      <% } %>
+
+      <form class="logout-form" action="/logout" method="POST">
+        <button type="submit">Salir</button>
+      </form>
+    </nav>
+  <% } %>
+</header>

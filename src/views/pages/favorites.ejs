@@ -7,32 +7,48 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Favoritos</h1>
+    <%- include("../partials/nav", { user }) %>
 
-    <p>Usuario: <%= user?.name || "Usuario" %></p>
+    <main class="page-shell">
+      <section class="page-heading">
+        <span class="landing-kicker">Tu lista</span>
+        <h1>Favoritos</h1>
+        <p>Gestiona las peliculas que has guardado.</p>
+      </section>
 
-    <% if (message) { %>
-      <p><%= message %></p>
-    <% } %>
+      <% if (message) { %>
+        <p class="notice"><%= message %></p>
+      <% } %>
 
-    <h2>Lista de favoritos</h2>
+      <% if (!favorites || favorites.length === 0) { %>
+        <section class="empty-state">
+          <h2>No tienes favoritos guardados</h2>
+          <p>Agrega peliculas desde el catalogo para verlas aqui.</p>
+          <a class="landing-button landing-button-primary" href="/movies">Ir a peliculas</a>
+        </section>
+      <% } else { %>
+        <section class="movie-grid">
+          <% favorites.forEach(favorite => { %>
+            <% const movie = favorite.movie || {}; %>
+            <article class="movie-card">
+              <img src="<%= movie.poster || movie.Poster || 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=900&q=80' %>" alt="Poster de <%= movie.title || movie.Title || favorite.sourceMovieId %>" />
+              <div class="movie-card-body">
+                <span class="pill"><%= favorite.sourceType %></span>
+                <h2><%= movie.title || movie.Title || "Pelicula guardada" %></h2>
+                <p><%= movie.year || movie.Year || "Sin año" %></p>
+                <p class="muted">ID: <%= favorite.sourceMovieId %></p>
 
-    <% if (favorites && favorites.length > 0) { %>
-      <ul>
-        <% favorites.forEach(favorite => { %>
-          <li>
-            <p><strong>ID favorito:</strong> <%= favorite.id %></p>
-            <p><strong>Origen:</strong> <%= favorite.sourceType %></p>
-            <p><strong>ID pelicula:</strong> <%= favorite.sourceMovieId %></p>
-
-            <form action="/favorites/<%= favorite.id %>/delete" method="POST">
-              <button type="submit">Eliminar</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
-    <% } else { %>
-      <p>No tienes favoritos guardados.</p>
-    <% } %>
+                <div class="card-actions">
+                  <a class="small-button secondary" href="/movies/<%= favorite.sourceMovieId %>">Detalles</a>
+                  <form action="/favorites/<%= favorite.id %>/delete" method="POST">
+                    <button class="small-button danger" type="submit">Eliminar</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          <% }) %>
+        </section>
+      <% } %>
+    </main>
   </body>
 </html>

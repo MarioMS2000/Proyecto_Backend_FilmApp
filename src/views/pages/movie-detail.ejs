@@ -7,40 +7,54 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1><%= movie.title %></h1>
-    <p>Detalle de película</p>
-    <a href="/movies">Volver</a>
-    <main>
-      <img src="<%= movie.poster %>" width="200" />
-      <p>Año: <%= movie.year %></p>
-      <p>Director: <%= movie.director %></p>
-      <p>Género: <%= movie.genre %></p>
-      <p>Duración: <%= movie.duration %></p>
-      <p>Plot: <%= movie.plot %></p>
-      <p>Actores: <%= Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors %></p>
-      <p>Rating: <%= movie.rating %></p>
+    <%- include("../partials/nav", { user }) %>
 
-      <form action="/favorites" method="POST">
-        <input type="hidden" name="sourceType" value="<%= movie.sourceType %>">
-        <input type="hidden" name="sourceMovieId" value="<%= movie.imdbID %>">
-        <button type="submit">Guardar favorito</button>
-      </form>
-    
-      <h2>Reviews</h2>
-    
-      <% if (reviewsError) { %>
-        <p><%= reviewsError %></p>
-        <% } else if(!movie.reviews || movie.reviews.length===0) { %>
-        <p>No hay reviews</p>
-      <% } else { %>
-          <% movie.reviews.forEach(review=> { %>
-            <section>
-              <p>Autor: <%= review.author %></p>
-              <p>Rating: <%= review.rating %></p>
-              <p><%= review.review %></p>
-            </section>
-          <% }) %>
+    <main class="detail-shell">
+      <a class="back-link" href="/movies">Volver a peliculas</a>
+
+      <section class="detail-layout">
+        <img class="detail-poster" src="<%= movie.poster %>" alt="Poster de <%= movie.title %>" />
+        <div class="detail-content">
+          <span class="pill"><%= movie.sourceType %></span>
+          <h1><%= movie.title %></h1>
+          <p class="detail-meta"><%= movie.year %> · <%= movie.genre %> · <%= movie.duration %></p>
+          <p><strong>Director:</strong> <%= movie.director %></p>
+          <p><strong>Actores:</strong> <%= Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors %></p>
+          <p><strong>Rating:</strong> <%= movie.rating %></p>
+          <p class="plot"><%= movie.plot %></p>
+
+          <% if (isFavorite) { %>
+            <p class="notice">Esta pelicula ya esta en tus favoritos.</p>
+          <% } else { %>
+            <form action="/favorites" method="POST">
+              <input type="hidden" name="sourceType" value="<%= movie.sourceType %>">
+              <input type="hidden" name="sourceMovieId" value="<%= movie.imdbID %>">
+              <input type="hidden" name="returnTo" value="<%= currentUrl %>">
+              <button class="landing-button landing-button-primary" type="submit">Guardar favorito</button>
+            </form>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="reviews-section">
+        <h2>Reviews</h2>
+
+        <% if (reviewsError) { %>
+          <p class="notice"><%= reviewsError %></p>
+        <% } else if (!movie.reviews || movie.reviews.length === 0) { %>
+          <p class="muted">No hay reviews disponibles.</p>
+        <% } else { %>
+          <div class="review-list">
+            <% movie.reviews.forEach(review => { %>
+              <article class="review-card">
+                <h3><%= review.author %></h3>
+                <p class="pill">Rating: <%= review.rating %></p>
+                <p><%= review.review %></p>
+              </article>
+            <% }) %>
+          </div>
         <% } %>
+      </section>
     </main>
   </body>
 </html>
