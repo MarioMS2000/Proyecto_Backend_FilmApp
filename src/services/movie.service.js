@@ -58,7 +58,16 @@ const searchMovie = async (title) => {
   const omdbResult = await searchMovies(title);
 
   if (omdbResult && omdbResult.length > 0) {
-    return omdbResult;
+    const detailedMovies = await Promise.all(
+      omdbResult.slice(0, 5).map(async (movie) => {
+        return await getMovieById(movie.imdbID);
+      }),
+    );
+    const filteredMovies = detailedMovies.filter((movie) => {
+      return (movie && movie.Director && movie.Genre && movie.Runtime && movie.Poster && movie.Poster !== "N/A"
+      );
+    });
+    return detailedMovies;
   }
 
   //Buscar en Mongo
@@ -79,7 +88,7 @@ const getMovieByIdService = async(imdbID) => {
 
   if (omdbMovie) {
     return omdbMovie;
-  }
+  };
 
   const mongoMovie = await Movie.findOne({
     imdbID: imdbID,

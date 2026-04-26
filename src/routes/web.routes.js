@@ -19,6 +19,7 @@ router.post("/signup", authController.register);
 router.get("/dashboard", requireAuth, viewsController.dashboard);
 router.get("/profile", requireAuth, viewsController.profile);
 router.get("/movies", requireAuth, movieController.showMovies);
+router.get("/movies/:id", requireAuth, movieController.showMovieDetail);
 
 // Usuario
 router.get("/search", requireAuth, requireRole("user"), viewsController.search);
