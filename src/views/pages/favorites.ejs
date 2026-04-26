@@ -15,31 +15,6 @@
       <p><%= message %></p>
     <% } %>
 
-    <h2>Añadir favorito</h2>
-    <form action="/favorites" method="POST">
-      <div>
-        <label for="sourceType">Origen:</label>
-        <select name="sourceType" id="sourceType" required>
-          <option value="">Selecciona una opción</option>
-          <option value="OMDB">OMDB</option>
-          <option value="MONGO">MONGO</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="sourceMovieId">ID de la película:</label>
-        <input
-          type="hidden"
-          id="sourceMovieId"
-          name="sourceMovieId"
-          value=¨teste¨
-          required
-        />
-      </div>
-
-      <button type="submit">Guardar en favoritos</button>
-    </form>
-
     <h2>Lista de favoritos</h2>
 
     <% if (favorites && favorites.length > 0) { %>
@@ -48,7 +23,7 @@
           <li>
             <p><strong>ID favorito:</strong> <%= favorite.id %></p>
             <p><strong>Origen:</strong> <%= favorite.sourceType %></p>
-            <p><strong>ID película:</strong> <%= favorite.sourceMovieId %></p>
+            <p><strong>ID pelicula:</strong> <%= favorite.sourceMovieId %></p>
 
             <form action="/favorites/<%= favorite.id %>/delete" method="POST">
               <button type="submit">Eliminar</button>
@@ -61,4 +36,3 @@
     <% } %>
   </body>
 </html>
-

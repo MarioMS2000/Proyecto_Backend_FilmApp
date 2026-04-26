@@ -48,6 +48,11 @@ const login = async ({ email, password }) => {
 
 const updatePassword = async ({id, password, newPassword, newPassword2}) => {
   const user = await User.findOne({where: {id}})
+
+  if (!user) {
+    throw new Error("User not found")
+  }
+
   const isValidPassword = await bcrypt.compare(password, user.password);
 
   if (!isValidPassword) {

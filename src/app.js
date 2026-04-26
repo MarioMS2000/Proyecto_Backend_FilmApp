@@ -7,11 +7,8 @@ const swaggerUi = require("swagger-ui-express")
 require("dotenv").config();
 
 // Routes 
-const webRoutes = require("./routes/web.routes");
-const authRoutes = require("./routes/auth.routes");
-const userRoutes = require("./routes/user.routes");
-const movieRoutes = require("./routes/movie.routes");
-const favoritesRoutes = require("./routes/favorites.routes");
+const webRoutes = require("./routes/web/index.routes");
+const apiRoutes = require("./routes/api/index.routes");
 
 // Middelwares/Docs
 const swaggerSpec = require("./config/swagger")
@@ -37,11 +34,7 @@ app.use(cookieParser())
 app.use("/", webRoutes);
 
 // Api
-app.use("/api", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/movie", movieRoutes);
-app.use("/api/favorites", favoritesRoutes);
+app.use("/api", apiRoutes);
 
 // Swagger
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

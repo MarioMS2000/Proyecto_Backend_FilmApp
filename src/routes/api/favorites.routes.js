@@ -3,11 +3,11 @@ const {
   getFavorites,
   addFavorite,
   removeFavorite,
-} = require("../controllers/favorites.controller");
+} = require("../../controllers/favorites.controller");
 
-const { requireAuth } = require("../middlewares/auth.middleware");
-const { requireRole } = require("../middlewares/role.middleware");
-const favoritesValidator = require("../validators/favorites.validator");
+const { requireAuth } = require("../../middlewares/auth.middleware");
+const { requireRole } = require("../../middlewares/role.middleware");
+const favoritesValidator = require("../../validators/favorites.validator");
 
 const router = express.Router();
 

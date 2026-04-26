@@ -57,7 +57,7 @@ const viewsController = {
   },
 
   profile(req, res) {
-    res.render("pages/profile", { user: req.user });
+    res.render("pages/profile", { user: req.user, message: "" });
   },
 
   movies(req, res) {
@@ -82,31 +82,23 @@ const viewsController = {
     res.render('pages/admin-create-user', {message: ""})
   },
 
-  search(req, res) {
-    res.render("pages/search", { user: req.user });
-  },
-
-  movieDetail(req, res) {
-    res.render("pages/movie-detail", {
-      user: req.user,
-      title: req.params.title,
-    });
-  },
-
   async users(req, res) {
     const users = await User.findAll()
     res.render("pages/users", { users });
   },
 
   async deleteUser(req, res) {
-    const deleted = await userService.deleteUser(req.body)
-    return res.redirect('/users')
+    const deleted = await userService.deleteUser({ id: req.params.id })
+    return res.redirect('/admin/users')
   },
 
   async updateUserByAdmin(req, res) {
-    const user = await userService.updateUser(req.body)
+    const user = await userService.updateUser({
+      id: req.params.id,
+      role: req.body.role,
+    })
 
-    return res.redirect('/users')
+    return res.redirect('/admin/users')
   }
 };
 
