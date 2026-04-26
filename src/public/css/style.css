@@ -241,3 +241,389 @@ a {
     text-align: center;
   }
 }
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px clamp(18px, 4vw, 48px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 12, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  color: #ff8c1a;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.main-nav > a,
+.logout-form button,
+.admin-menu summary {
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f7f7f7;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.main-nav > a,
+.logout-form button {
+  padding: 9px 13px;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.admin-menu {
+  position: relative;
+}
+
+.admin-menu summary {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  padding: 8px;
+  list-style: none;
+}
+
+.admin-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-menu summary span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  margin: 2px 0;
+  background: #80e0d4;
+}
+
+.admin-menu-panel {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  min-width: 230px;
+  padding: 10px;
+  border: 1px solid rgba(128, 224, 212, 0.22);
+  border-radius: 8px;
+  background: #151515;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+}
+
+.admin-menu-panel a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #f5f5f5;
+}
+
+.admin-menu-panel a:hover,
+.main-nav > a:hover,
+.logout-form button:hover {
+  background: rgba(128, 224, 212, 0.12);
+}
+
+.page-shell,
+.detail-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.page-shell.narrow {
+  width: min(760px, calc(100% - 32px));
+}
+
+.page-heading {
+  margin-bottom: 22px;
+}
+
+.page-heading.split {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.page-heading h1 {
+  margin: 6px 0 8px;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.page-heading p,
+.muted,
+.detail-meta {
+  color: #cfcfcf;
+}
+
+.toolbar,
+.panel,
+.table-panel,
+.empty-state,
+.review-card {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.toolbar,
+.panel,
+.empty-state,
+.review-card {
+  padding: 20px;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  margin: 0;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #101010;
+  color: #f8f8f8;
+  font: inherit;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.stacked-form {
+  display: grid;
+  gap: 12px;
+}
+
+.form-actions,
+.card-actions,
+.row-actions,
+.inline-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.movie-card {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #171717;
+}
+
+.movie-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: #0d0d0d;
+}
+
+.movie-card-body {
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+}
+
+.movie-card h2,
+.action-panel h2,
+.panel h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.movie-card p {
+  margin: 0;
+}
+
+.pill {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(128, 224, 212, 0.14);
+  color: #80e0d4;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.small-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #ff8c1a;
+  color: #111;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.small-button.secondary {
+  border: 1px solid rgba(128, 224, 212, 0.3);
+  background: rgba(128, 224, 212, 0.1);
+  color: #f7f7f7;
+}
+
+.small-button.danger {
+  background: #ff5c5c;
+  color: #111;
+}
+
+.small-button.disabled {
+  background: rgba(255, 255, 255, 0.12);
+  color: #cfcfcf;
+  cursor: default;
+}
+
+.notice {
+  padding: 12px 14px;
+  border-left: 4px solid #80e0d4;
+  border-radius: 8px;
+  background: rgba(128, 224, 212, 0.1);
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.detail-poster {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.detail-content h1 {
+  margin: 8px 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+.plot {
+  color: #ececec;
+  line-height: 1.7;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #80e0d4;
+  font-weight: 800;
+}
+
+.reviews-section {
+  margin-top: 32px;
+}
+
+.review-list,
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.profile-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.profile-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.profile-list dt {
+  color: #cfcfcf;
+}
+
+.profile-list dd {
+  margin: 0;
+  font-weight: 800;
+}
+
+.action-panel {
+  display: block;
+}
+
+.table-panel {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+th {
+  color: #80e0d4;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .app-header,
+  .main-nav,
+  .page-heading.split,
+  .detail-layout,
+  .search-form {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .app-header,
+  .main-nav,
+  .page-heading.split {
+    flex-direction: column;
+  }
+
+  .admin-menu-panel {
+    left: 0;
+    right: auto;
+  }
+}

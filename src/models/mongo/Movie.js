@@ -1,5 +1,5 @@
 // Importamos mongoose, que es la librería que nos permite modelar datos
-// y trabajar con MongoDB de forma estructurada (ODM).
+// y trabajar con MongoDB de forma estructurada (ODM)
 const mongoose = require("mongoose");
 
 const movieSchema = new mongoose.Schema({
@@ -43,7 +43,7 @@ const movieSchema = new mongoose.Schema({
 
   imdbRating: String,
 
-  // source, de dónde viene la película
+  //source indica de dónde viene la película
   source: {
     type: String,
     enum: ["omdb", "mongo"],

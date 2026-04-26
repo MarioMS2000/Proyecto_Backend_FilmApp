@@ -1,4 +1,5 @@
 const userService = require("../services/user.service");
+const authService = require("../services/auth.service");
 
 const getProfile = (req, res) => {
   return res.status(200).json({
@@ -14,27 +15,41 @@ const updateProfile = (req, res) => {
   });
 };
 
-const getAllUsers = (_req, res) => {
-  return res.status(200).json(userService.getAllUsers());
+const getAllUsers = async ( req, res) => {
+  const users = await userService.getAllUsers()
+  return res.status(200).json(users);
 };
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
+  const user = await authService.register(req.body);
+
   return res.status(201).json({
-    message: "User creation pending implementation",
-    payload: req.body,
+    message: "User created",
+    user: {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
   });
 };
 
-const updateUserByAdmin = (req, res) => {
-  const user = userService.updateUser(req.body)
+const updateUserByAdmin = async (req, res) => {
+  const user = await userService.updateUser({
+    id: req.params.id,
+    role: req.body.role,
+  });
 
-  return res.redirect('/users')
+  return res.status(200).json(user);
 };
 
 const deleteUser = async (req, res) => {
-  const deleted = await userService.deleteUser(req.body)
-  return res.redirect('/users')
+  await userService.deleteUser({ id: req.params.id });
+
+  return res.status(200).json({ message: "User deleted" });
 };
+
+
+
 
 module.exports = {
   getProfile,

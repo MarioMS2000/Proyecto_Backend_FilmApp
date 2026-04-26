@@ -9,13 +9,21 @@ const getAllUsers = async () => {
 const updateUser = async ({id, role}) => {
   const user = await User.findOne({where: {id}})
 
-  user.update({role})
+  if (!user) {
+    throw new Error("User not found")
+  }
+
+  await user.update({role})
 
   return user
 }
 
 const deleteUser = async ({id}) => {
   const user = await User.findOne({where: {id}})
+
+  if (!user) {
+    throw new Error("User not found")
+  }
 
   await user.destroy()
   return true

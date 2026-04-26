@@ -1,4 +1,5 @@
 const Favorite = require("../models/sql/Favorite");
+const { randomUUID } = require("crypto");
 
 // GET
 const getAllFavoritesMovies = async (userId) => {
@@ -11,7 +12,14 @@ const getAllFavoritesMovies = async (userId) => {
 // POST -> favoriteData = sourceType, sourceMovieId;
 const addFavoriteMovie = async (userId, favoriteData) => {
   const { sourceType, sourceMovieId } = favoriteData;
+
+  if (!sourceType || !sourceMovieId) {
+    throw new Error("Favorite source data required");
+  }
+
+  // El favorito guarda la referencia a la pelicula, no la pelicula completa.
   return Favorite.create({
+    id: randomUUID(),
     user_id: userId,
     sourceType,
     sourceMovieId,

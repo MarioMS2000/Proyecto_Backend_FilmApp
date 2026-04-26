@@ -1,24 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Registro Admin</h1>
-    <form action="/admin-create-user" method="post">
-      <label for="name">Name</label>
-      <input type="text" name="name" id="name" required>
-      <label for="email">Email</label>
-      <input type="text" name="email" id="email" required>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
-      <label for="password2">Confirm password</label>
-      <input type="password" name="password2" id="password2" required>
-      <button type="submit">Register</button>
-    </form>
-    
-    <p><%= message %></p>
-</body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear usuario</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
+
+    <main class="page-shell narrow">
+      <section class="page-heading">
+        <span class="landing-kicker">Admin</span>
+        <h1>Crear usuario</h1>
+        <p>Registra una cuenta nueva. El rol se puede cambiar desde administracion.</p>
+      </section>
+
+      <form class="panel stacked-form" action="/admin/users" method="POST">
+        <label for="name">Nombre</label>
+        <input type="text" name="name" id="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" id="password" required>
+
+        <label for="password2">Confirmar contraseña</label>
+        <input type="password" name="password2" id="password2" required>
+
+        <% if (message) { %>
+          <p class="notice"><%= message %></p>
+        <% } %>
+
+        <div class="form-actions">
+          <a class="landing-button landing-button-secondary" href="/admin/users">Cancelar</a>
+          <button class="landing-button landing-button-primary" type="submit">Crear usuario</button>
+        </div>
+      </form>
+    </main>
+  </body>
 </html>

@@ -6,10 +6,10 @@ const { searchMovies,
         createMovie,
         updateMovie,
         deleteMovie,
-        getRandomMoviesController } = require("../controllers/movie.controller");
+        getRandomMoviesController } = require("../../controllers/movie.controller");
 
-const { requireAuth } = require("../middlewares/auth.middleware");
-const { requireRole } = require("../middlewares/role.middleware");
+const { requireAuth } = require("../../middlewares/auth.middleware");
+const { requireRole } = require("../../middlewares/role.middleware");
 
 // User
 router.get("/random", requireAuth, requireRole("user"), getRandomMoviesController);

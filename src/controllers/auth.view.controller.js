@@ -19,7 +19,7 @@ const login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, accessTokenCookieOptions);
 
-    return res.redirect("/");
+    return res.redirect("/movies");
   } catch (error) {
     return res.render("pages/login", { message: error.message });
   }
@@ -32,18 +32,17 @@ const logout = ( req, res) => {
 
 const restorePassword = async (req, res) => {
   try {
-    const user = await authService.updatePassword(req.body);
-    return res.status(200).json({
+    await authService.updatePassword(req.body);
+
+    return res.render("pages/profile", {
+      user: req.user,
       message: "Password changed successfully",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
     });
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).render("pages/profile", {
+      user: req.user,
+      message: error.message,
+    });
   }
 };
 
@@ -51,9 +50,12 @@ const adminCreateUser = async (req, res) => {
   try {
     const user = await authService.register(req.body);
 
-    return res.redirect("/users");
+    return res.redirect("/admin/users");
   } catch (error) {
-    return res.render("pages/register", { message: error.message });
+    return res.render("pages/admin-create-user", {
+      user: req.user,
+      message: error.message,
+    });
   }
 };
 

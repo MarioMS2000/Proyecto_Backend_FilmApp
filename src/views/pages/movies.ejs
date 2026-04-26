@@ -1,60 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= pageTitle %></title>
-  <link rel="stylesheet" href="/css/style.css" />
-</head>
-<body>
-  <nav>
-    <a href="/movies">Películas</a>
-    <a href="/favorites">Favoritos</a>
-  </nav>
-  <main class="movies-page">
-    <!-- BUSCADOR -->
-    <section class="card">
-      <h2>Buscar película</h2>
-      <form method="GET" action="/movies">
-        <input name="title" type="text" placeholder="Buscar..." />
-        <button type="submit">Buscar</button>
-      </form>
-    </section>
-
-    <!-- MENSAJE ERROR SI NO ENCUENTRA PELI-->
-    <% if (error) { %>
-      <section class="card">
-        <p><%= error %></p>
+    <main class="page-shell">
+      <section class="page-heading">
+        <span class="landing-kicker">Catalogo</span>
+        <h1>Peliculas</h1>
+        <p>Busca una pelicula o explora sugerencias para guardarlas en favoritos.</p>
       </section>
+
+      <section class="toolbar">
+        <form class="search-form" method="GET" action="/movies">
+          <input name="title" type="search" placeholder="Buscar pelicula..." value="<%= typeof title !== 'undefined' ? title : '' %>" />
+          <button class="landing-button landing-button-primary" type="submit">Buscar</button>
+        </form>
+      </section>
+
+      <% if (error) { %>
+        <p class="notice"><%= error %></p>
       <% } %>
-        <!-- LISTA DE PELÍCULAS -->
-        <section class="card">
-          <h2>Películas</h2>
 
-          <% if (!movies || movies.length===0) { %>
-            <p>No hay películas disponibles</p>
-            <% } else { %>
-
-              <section class="movies-grid">
-
-                <% movies.forEach(movie=> { %>
-                  <article class="movie-card">
-                    <img src="<%= movie.poster %>" alt="<%= movie.title %>" width="150" />
-                    <h3><%= movie.title %></h3>
-                    <p>Año:<%= movie.year %></p>
-                    <p>Director:<%= movie.director %></p>
-                    <p>Género:<%= movie.genre %></p>
-                    <p>Duración:<%= movie.duration %></p>
-                    <!--btn favoritos - para guardar peli-->
-                    <!-- LINK DETALLE DE PELI -->
-                    <a href="/movies/<%= movie.imdbID %>">Ver detalles</a>
-                  </article>
-                <% }) %>
-            <% } %>
-              </section>
+      <% if (!movies || movies.length === 0) { %>
+        <section class="empty-state">
+          <h2>No hay peliculas disponibles</h2>
+          <p>Prueba con otro titulo o vuelve a cargar la pagina.</p>
         </section>
-  </main>
-</body>
+      <% } else { %>
+        <section class="movie-grid">
+          <% movies.forEach(movie => { %>
+            <article class="movie-card">
+              <img src="<%= movie.poster %>" alt="Poster de <%= movie.title %>" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=900&q=80';" />
+              <div class="movie-card-body">
+                <span class="pill"><%= movie.sourceType %></span>
+                <h2><%= movie.title %></h2>
+                <p><%= movie.year %> · <%= movie.genre %></p>
+                <p><%= movie.director %></p>
 
+                <div class="card-actions">
+                  <% if (movie.imdbID) { %>
+                    <% if (favoriteMovieIds && favoriteMovieIds.includes(movie.imdbID)) { %>
+                      <span class="small-button disabled">En favoritos</span>
+                    <% } else { %>
+                      <form action="/favorites" method="POST">
+                        <input type="hidden" name="sourceType" value="<%= movie.sourceType %>">
+                        <input type="hidden" name="sourceMovieId" value="<%= movie.imdbID %>">
+                        <input type="hidden" name="returnTo" value="<%= currentUrl %>">
+                        <button class="small-button" type="submit">Favorito</button>
+                      </form>
+                    <% } %>
+                    <a class="small-button secondary" href="/movies/<%= movie.imdbID %>">Detalles</a>
+                  <% } else { %>
+                    <span class="muted">Sin ID para detalle</span>
+                  <% } %>
+                </div>
+              </div>
+            </article>
+          <% }) %>
+        </section>
+      <% } %>
+    </main>
+  </body>
 </html>

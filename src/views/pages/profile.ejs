@@ -7,20 +7,53 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Perfil</h1>
-    <p>Email:</p>
-    <p><%= user.email %></p>
-    <p>Name:</p>
-    <p><%= user.name %></p>
-    <form action="/updatePassword" method="POST">
-      <label for="password">Password</label>
-      <input type="password" name="password">
-      <label for="new-password">New Password</label>
-      <input type="password" name="newPassword" id="newPassword">
-      <label for="new-password2">Confirm Password</label>
-      <input type="password" name="newPassword2" id="newPassword2">
-      <input type="hidden" name="id" value=<%= user.id %>>
-      <button type="submit">Change password</button>
-    </form>
+    <%- include("../partials/nav", { user }) %>
+
+    <main class="page-shell narrow">
+      <section class="page-heading">
+        <span class="landing-kicker">Cuenta</span>
+        <h1>Perfil</h1>
+        <p>Revisa tus datos y cambia tu contraseña.</p>
+      </section>
+
+      <section class="panel">
+        <dl class="profile-list">
+          <div>
+            <dt>Nombre</dt>
+            <dd><%= user.name %></dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><%= user.email %></dd>
+          </div>
+          <div>
+            <dt>Rol</dt>
+            <dd><%= user.role %></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="panel">
+        <h2>Cambiar contraseña</h2>
+
+        <% if (message) { %>
+          <p class="notice"><%= message %></p>
+        <% } %>
+
+        <form class="stacked-form" action="/profile/password" method="POST">
+          <label for="password">Contraseña actual</label>
+          <input type="password" name="password" id="password" required>
+
+          <label for="newPassword">Nueva contraseña</label>
+          <input type="password" name="newPassword" id="newPassword" required>
+
+          <label for="newPassword2">Confirmar contraseña</label>
+          <input type="password" name="newPassword2" id="newPassword2" required>
+
+          <input type="hidden" name="id" value="<%= user.id %>">
+          <button class="landing-button landing-button-primary" type="submit">Actualizar contraseña</button>
+        </form>
+      </section>
+    </main>
   </body>
 </html>

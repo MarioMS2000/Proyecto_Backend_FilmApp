@@ -1,6 +1,12 @@
 const { getMovieReviews } = require("../services/scraping.service");
 const {searchMovie,getMovieByIdService,getRandomMovies} = require("../services/movie.service");
+const favoritesService = require("../services/favorites.service");
 const Movie = require("../models/mongo/Movie");
+
+const getFavoriteMovieIds = async (userId) => {
+  const favorites = await favoritesService.getAllFavoritesMovies(userId);
+  return favorites.map((favorite) => favorite.sourceMovieId);
+};
 
 //USERS buscar peli
 const showMovies = async (req, res) => {
@@ -8,6 +14,8 @@ const showMovies = async (req, res) => {
   const title = req.query.title;
   let movies = [];
   //si el usuario busca y muestra resultados
+  const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
+
   if (title) {
     const results = await searchMovie(title);
 
@@ -19,6 +27,8 @@ const showMovies = async (req, res) => {
       genre: movie.genre || movie.Genre,
       duration: movie.duration || movie.Runtime,
       imdbID: movie.imdbID,
+      // La vista manda este origen al crear el favorito.
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
     }));
   } else {
     //si no busca por título, muestra aleatorias
@@ -32,12 +42,16 @@ const showMovies = async (req, res) => {
       genre: movie.genre || movie.Genre,
       duration: movie.duration || movie.Runtime,
       imdbID: movie.imdbID,
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
     }));
   }
   return res.render("pages/movies", {
     pageTitle: "Películas",
+    user: req.user,
     movies,
-    error: "Error al cargar las películas",
+    favoriteMovieIds,
+    currentUrl: req.originalUrl,
+    error: ""
   });
 };
 
@@ -48,49 +62,68 @@ const showMovieDetail = async (req, res) => {
   //Si no hay ID vuelve al listado de películas
   if (!imdbID) return res.redirect("/movies");
 
-  //Busca la película en OMDb o Mongo
-  const movie = await getMovieByIdService(imdbID);
+    const movie = await getMovieByIdService(imdbID);
+    const favoriteMovieIds = await getFavoriteMovieIds(req.user.id);
 
-  // Si no encuentra la película, muestra la vista de listado con error
-  if (!movie) {
-    return res.render("pages/movies", {
-      pageTitle: "Películas",
-      movies: [],
-      error: "No se encontró la película",
+    if(!movie){
+       return res.render("pages/movies", {
+         pageTitle: "Películas",
+         user: req.user,
+         movies: [],
+         favoriteMovieIds,
+         currentUrl: "/movies",
+         error: "No se encontró la película",
+       });
+    }
+    let reviews = [];
+    let reviewsError = null;
+    try {
+      reviews = await getMovieReviews(movie.title || movie.Title);
+    } catch (error) {
+      reviewsError = "No se pudieron cargar las reviews";
+    }
+    const response = {
+      title: movie.title || movie.Title,
+      poster: movie.poster || movie.Poster,
+      year: movie.year || movie.Year,
+      director: movie.director || movie.Director,
+      genre: movie.genre || movie.Genre,
+      duration: movie.duration || movie.Runtime,
+      plot: movie.plot || movie.Plot,
+      actors: movie.actors || movie.Actors,
+      rating: movie.imdbRating,
+      imdbID: movie.imdbID || imdbID,
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
+      reviews,
+    };
+    return res.render("pages/movie-detail", {
+      pageTitle: response.title,
+      user: req.user,
+      movie: response,
+      isFavorite: favoriteMovieIds.includes(response.imdbID),
+      currentUrl: req.originalUrl,
+      reviewsError,
     });
-  }
-  let reviews = [];
-  let reviewsError = null;
-  try {
-    // Obtiene las reviews por título de la película
-    reviews = await getMovieReviews(movie.title || movie.Title);
-  } catch (error) {
-    // Si falla la API de reviews, guarda el error
-    reviewsError = "No se pudieron cargar las reviews";
-  }
-  const response = {
-    title: movie.title || movie.Title,
-    poster: movie.poster || movie.Poster,
-    year: movie.year || movie.Year,
-    director: movie.director || movie.Director,
-    genre: movie.genre || movie.Genre,
-    duration: movie.duration || movie.Runtime,
-    plot: movie.plot || movie.Plot,
-    actors: movie.actors || movie.Actors,
-    rating: movie.imdbRating,
-    reviews,
-  };
-  // Renderiza la vista de detalle de película
-  return res.render("pages/movie-detail", {
-    pageTitle: response.title,
-    movie: response,
-    reviewsError,
-  });
-};;
+};
+
+const showAdminMovies = async (req, res) => {
+  const movies = await Movie.find();
+  return res.render("pages/admin-movies", { user: req.user, movies });
+};
+
+const showAdminEditMovie = async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  return res.render("pages/admin-edit-movie", { user: req.user, movie });
+};
+
+const showAdminCreateMovie = (req, res) => {
+  return res.render("pages/admin-create-movie", { user: req.user });
+};
+
 const createMovie = async (req, res) => {
   try {
     const movie = await Movie.create(req.body);
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
   } catch (error) {
     return res.status(500).json({
       message: "Error creando película",
@@ -109,7 +142,7 @@ const updateMovie = async (req, res) => {
         message: "Película no encontrada",
       });
     }
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
   } catch (error) {
     return res.status(500).json({
       message: "Error actualizando película",
@@ -126,7 +159,7 @@ const deleteMovie = async (req, res) => {
         message: "Película no encontrada",
       });
     }
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
 
   } catch (error) {
     return res.status(500).json({
@@ -157,6 +190,9 @@ const getRandomMoviesController = async (req, res) => {
 module.exports = {
   showMovies,
   showMovieDetail,
+  showAdminMovies,
+  showAdminEditMovie,
+  showAdminCreateMovie,
   createMovie,
   updateMovie,
   deleteMovie,

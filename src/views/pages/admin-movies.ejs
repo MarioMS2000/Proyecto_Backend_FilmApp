@@ -1,25 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Movies</title>
-</head>
-<body>
-  <h1>Movies</h1>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrar peliculas</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <%- include("../partials/nav", { user }) %>
 
-  <a href="/admin-create-movie">Create movie</a>
+    <main class="page-shell">
+      <section class="page-heading split">
+        <div>
+          <span class="landing-kicker">Admin</span>
+          <h1>Peliculas</h1>
+          <p>Crea, edita o elimina peliculas guardadas en MongoDB.</p>
+        </div>
+        <a class="landing-button landing-button-primary" href="/admin/movies/new">Crear pelicula</a>
+      </section>
 
-  <% movies.forEach(movie => { %>
-    <p><%= movie.title %></p>
-    <form action=<%= `/admin-movies/${movie.id}` %>>
-      <input type="hidden" name="id" value=<%= movie.id %>>
-      <button type="submit">Edit</button>
-    </form>
-    <form action=<%= `/admin-movies/delete/${movie.id}` %> method="post">
-      <input type="hidden" name="id" value=<%= movie.id %>>
-      <button type="submit">Delete</button>
-    </form>
-  <% }) %>
-</body>
+      <% if (!movies || movies.length === 0) { %>
+        <section class="empty-state">
+          <h2>No hay peliculas creadas</h2>
+          <p>Añade la primera pelicula manual.</p>
+        </section>
+      <% } else { %>
+        <section class="table-panel">
+          <table>
+            <thead>
+              <tr>
+                <th>Titulo</th>
+                <th>Año</th>
+                <th>Genero</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% movies.forEach(movie => { %>
+                <tr>
+                  <td><%= movie.title %></td>
+                  <td><%= movie.year %></td>
+                  <td><%= movie.genre %></td>
+                  <td class="row-actions">
+                    <a class="small-button secondary" href="/admin/movies/<%= movie.id %>/edit">Editar</a>
+                    <form action="/admin/movies/<%= movie.id %>/delete" method="POST">
+                      <button class="small-button danger" type="submit">Eliminar</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+      <% } %>
+    </main>
+  </body>
 </html>
