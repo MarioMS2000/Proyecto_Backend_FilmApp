@@ -30,6 +30,7 @@ const getMovieById = async (imdbID) => {
     const response = await axios.get(OMDB_URL, {
       params: {
         apikey: process.env.OMDB_API_KEY,
+        //busca por id único de la (IMDb)
         i: imdbID,
         //sinopsis completa
         plot: "full",

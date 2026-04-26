@@ -7,7 +7,7 @@ const showMovies = async (req, res) => {
   //búsqueda desde URL, API, sino en mongo
   const title = req.query.title;
   let movies = [];
-
+  //si el usuario busca y muestra resultados
   if (title) {
     const results = await searchMovie(title);
 
@@ -21,6 +21,7 @@ const showMovies = async (req, res) => {
       imdbID: movie.imdbID,
     }));
   } else {
+    //si no busca por título, muestra aleatorias
     const randomMovies = await getRandomMovies();
 
     movies = randomMovies.map((movie) => ({
@@ -36,50 +37,56 @@ const showMovies = async (req, res) => {
   return res.render("pages/movies", {
     pageTitle: "Películas",
     movies,
-    error: ""
+    error: "Error al cargar las películas",
   });
 };
 
 // detalles de la pelí
 const showMovieDetail = async (req, res) => {
-    const imdbID = req.params.id;
-    
-    if (!imdbID) return res.redirect("/movies");
+  // Obtiene el ID de la película desde la URL
+  const imdbID = req.params.id;
+  //Si no hay ID vuelve al listado de películas
+  if (!imdbID) return res.redirect("/movies");
 
-    const movie = await getMovieByIdService(imdbID);
+  //Busca la película en OMDb o Mongo
+  const movie = await getMovieByIdService(imdbID);
 
-    if(!movie){
-       return res.render("pages/movies", {
-         pageTitle: "Películas",
-         movies: [],
-         error: "No se encontró la película",
-       });
-    }
-    let reviews = [];
-    let reviewsError = null;
-    try {
-      reviews = await getMovieReviews(movie.title || movie.Title);
-    } catch (error) {
-      reviewsError = "No se pudieron cargar las reviews";
-    }
-    const response = {
-      title: movie.title || movie.Title,
-      poster: movie.poster || movie.Poster,
-      year: movie.year || movie.Year,
-      director: movie.director || movie.Director,
-      genre: movie.genre || movie.Genre,
-      duration: movie.duration || movie.Runtime,
-      plot: movie.plot || movie.Plot,
-      actors: movie.actors || movie.Actors,
-      rating: movie.imdbRating,
-      reviews,
-    };
-    return res.render("pages/movie-detail", {
-      pageTitle: response.title,
-      movie: response,
-      reviewsError,
+  // Si no encuentra la película, muestra la vista de listado con error
+  if (!movie) {
+    return res.render("pages/movies", {
+      pageTitle: "Películas",
+      movies: [],
+      error: "No se encontró la película",
     });
-};
+  }
+  let reviews = [];
+  let reviewsError = null;
+  try {
+    // Obtiene las reviews por título de la película
+    reviews = await getMovieReviews(movie.title || movie.Title);
+  } catch (error) {
+    // Si falla la API de reviews, guarda el error
+    reviewsError = "No se pudieron cargar las reviews";
+  }
+  const response = {
+    title: movie.title || movie.Title,
+    poster: movie.poster || movie.Poster,
+    year: movie.year || movie.Year,
+    director: movie.director || movie.Director,
+    genre: movie.genre || movie.Genre,
+    duration: movie.duration || movie.Runtime,
+    plot: movie.plot || movie.Plot,
+    actors: movie.actors || movie.Actors,
+    rating: movie.imdbRating,
+    reviews,
+  };
+  // Renderiza la vista de detalle de película
+  return res.render("pages/movie-detail", {
+    pageTitle: response.title,
+    movie: response,
+    reviewsError,
+  });
+};;
 const createMovie = async (req, res) => {
   try {
     const movie = await Movie.create(req.body);

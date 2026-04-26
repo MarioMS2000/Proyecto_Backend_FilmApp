@@ -9,8 +9,10 @@
   <body>
     <h1><%= movie.title %></h1>
     <p>Detalle de película</p>
+    <!-- Link para volver al listado -->
     <a href="/movies">Volver</a>
     <main>
+      <!-- Información de la película -->
       <img src="<%= movie.poster %>" width="200" />
       <p>Año: <%= movie.year %></p>
       <p>Director: <%= movie.director %></p>
@@ -18,15 +20,18 @@
       <p>Duración: <%= movie.duration %></p>
       <p>Plot: <%= movie.plot %></p>
       <p>Actores: <%= Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors %></p>
+      <!-- Rating de la película -->
       <p>Rating: <%= movie.rating %></p>
     
       <h2>Reviews</h2>
-    
+      <!-- Si hubo error al cargar reviews -->
       <% if (reviewsError) { %>
         <p><%= reviewsError %></p>
+        <!-- Si no hay reviews -->
         <% } else if(!movie.reviews || movie.reviews.length===0) { %>
         <p>No hay reviews</p>
       <% } else { %>
+        <!-- Si sí hay reviews -->
           <% movie.reviews.forEach(review=> { %>
             <section>
               <p>Autor: <%= review.author %></p>

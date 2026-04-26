@@ -1,7 +1,8 @@
 const Movie = require("../models/mongo/Movie");
 const { searchMovies, getMovieById } = require("./omdb.service");
 
-const POPULAR_TITLES = [
+//array de string para generar películas aleatorias
+const titles_movies = [
   "Batman",
   "Inception",
   "Matrix",
@@ -60,7 +61,7 @@ const searchMovie = async (title) => {
   if (omdbResult && omdbResult.length > 0) {
     const detailedMovies = await Promise.all(
       omdbResult.slice(0, 5).map(async (movie) => {
-        return await getMovieById(movie.imdbID);
+        return await getMovieById(movie.imdbI);
       }),
     );
     const filteredMovies = detailedMovies.filter((movie) => {
@@ -72,7 +73,7 @@ const searchMovie = async (title) => {
 
   //Buscar en Mongo
   const mongoResult = await Movie.find({
-    //RegExp permite busqueda , "i" ignora mayúsculas/minúsculas
+    //RegExp permite busqueda por título, "i" ignore case, ignora mayúsculas/minúsculas
     title: new RegExp(title, "i"),
   });
   if (mongoResult && mongoResult.length > 0) {
@@ -102,21 +103,26 @@ const getMovieByIdService = async(imdbID) => {
 }
 
 const getRandomMovies = async () => {
-  const shuffled = POPULAR_TITLES.sort(() => 0.5 - Math.random());
-  const selected = shuffled.slice(0, 10);
+  //Mezcla la lista de títulos y elige 10 peliculas aleatorias
+  const randomTitle = titles_movies.sort(() => 0.5 - Math.random());
+  const selected = randomTitle.slice(0, 10);
 
-  // Primera búsqueda por título en OMDB
+  // Primero buscar en OMDb
   const promises = selected.map((title) => searchMovies(title));
   const results = await Promise.all(promises);
 
-  // Coge el primer resultado de cada búsqueda
+  // Filtra los resultados válidos y elimina valores vacíos o undefined
   const firstResults = results.map((result) => result[0]).filter(Boolean);
 
-  // Busca detalle completo de cada una con getMovieById
-  const detailedPromises = firstResults.map((movie) => getMovieById(movie.imdbID));
+  // Obtiene el detalle completo de cada película mediante su ID
+  const detailedPromises = firstResults.map((movie) =>
+    getMovieById(movie.imdbID),
+  );
+  // Devuelve películas
   const detailed = await Promise.all(detailedPromises);
   return detailed.filter(Boolean);
 };
+
 module.exports = {
   searchMovie,
   getMovieByIdService,
