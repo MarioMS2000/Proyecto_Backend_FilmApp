@@ -4,6 +4,7 @@ const { requireAuth } = require("../middlewares/auth.middleware");
 const { requireRole } = require("../middlewares/role.middleware");
 const movieController = require('../controllers/movie.view.controller')
 const authController = require('../controllers/auth.view.controller')
+const favoriteViewController = require('../controllers/favorite.view.controller')
 
 const router = express.Router();
 
@@ -19,6 +20,9 @@ router.post("/signup", authController.register);
 router.get("/dashboard", requireAuth, viewsController.dashboard);
 router.get("/profile", requireAuth, viewsController.profile);
 router.get("/movies", requireAuth, movieController.showMovies);
+router.get("/favorites", requireAuth, favoriteViewController.favorites);
+router.post("/favorites", requireAuth, favoriteViewController.addFavorite);
+router.post("/favorites/:id/delete", requireAuth, favoriteViewController.removeFavorite);
 router.get("/movies/:id", requireAuth, movieController.showMovieDetail);
 
 // Usuario
@@ -35,6 +39,8 @@ router.post("/admin-movies/:id", requireAuth, requireRole("admin"), movieControl
 router.post("/admin-movies/delete/:id", requireAuth, requireRole("admin"), movieController.deleteMovie)
 router.post("/admin-create-movie", requireAuth, requireRole("admin"), movieController.createMovie)
 router.post("/admin-create-user", requireAuth, requireRole("admin"), authController.adminCreateUser)
+router.post("/updateRole", requireAuth, requireRole("admin"), viewsController.updateUserByAdmin);
+router.post("/deleteUser", requireAuth, requireRole("admin"), viewsController.deleteUser);
 
 
 
