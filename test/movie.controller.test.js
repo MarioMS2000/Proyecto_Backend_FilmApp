@@ -1,7 +1,4 @@
-const mockSearchMovie = jest.fn();
-const mockGetMovieReviews = jest.fn();
-const mockGetRandomMovies = jest.fn();
-
+// Simula el modelo de MongoDB sin conectar a la base de datos real
 const mockMovieModel = {
   find: jest.fn(),
   create: jest.fn(),
@@ -9,6 +6,13 @@ const mockMovieModel = {
   findByIdAndDelete: jest.fn()
 };
 
+// Mocks de servicios externos usados por el controller para evitar llamadas reales a APIs
+const mockSearchMovie = jest.fn();
+const mockGetMovieReviews = jest.fn();
+const mockGetRandomMovies = jest.fn();
+
+// Sustituye los servicios reales por mocks para aislar el controller en los tests,
+// evitando llamadas a APIs externas, scraping
 jest.mock("../src/services/movie.service", () => ({
   searchMovie: mockSearchMovie,
   getRandomMovies: mockGetRandomMovies,
@@ -18,11 +22,14 @@ jest.mock("../src/services/scraping.service", () => ({
   getMovieReviews: mockGetMovieReviews,
 }));
 
+// Sustituimos el modelo real de Mongo por nuestro mock
 jest.mock("../src/models/mongo/Movie", () => mockMovieModel);
 
+//Importamos las funciones que vamos a testear de movie controller
 const {searchMovies,getMovieByTitle,getAllMovies,createMovie,updateMovie,deleteMovie,getRandomMoviesController} = require("../src/controllers/movie.controller");
 
-// Permite probar res.status(...).json(...)
+// fakeRes es la respuesta de Express (res) para poder testear el controller sin servidor real,
+// simulando el comportamiento de res.status().json() 
 const fakeRes = () => {
     const res = {};
     res.status = jest.fn(() => res);
@@ -35,7 +42,7 @@ beforeEach(() => {
     jest.clearAllMocks();
 })
 
-// test searchMovies 
+// test searchMovies, verifica que devuelve error 400 cuando no se envía el título en la query 
 test("devuelve 400 si no hay title", async () =>{
     const req = {query: {}};
     const res = fakeRes();
@@ -48,199 +55,245 @@ test("devuelve 400 si no hay title", async () =>{
     });
 });
 
+// Verifica que devuelva las películas formateadas y mapea datos de la API externa
 test("devuelve películas formateadas correctamente", async() => {
-    const moviesMock = [
-        {
-            Title: "Batman",
-            Poster: "img.jpg",
-            Year: "2008",
-        }
-    ]
-    mockSearchMovie.mockResolvedValue(moviesMock);
+  //Simula lo que devolvería una API OMDb
+  const moviesMock = [
+    {
+      Title: "Batman",
+      Poster: "img.jpg",
+      Year: "2008",
+    },
+  ];
+  // Definimos lo que devolverá el servicio mockeado cuando se invoque searchMovie
+  mockSearchMovie.mockResolvedValue(moviesMock);
 
-    const req = {query: {title: "batman"}};
-    const res = fakeRes();
+  //simula la query string de Express req.query.tittle
+  const req = { query: { title: "batman" } };
 
-    await searchMovies(req, res);
+  //Mock, simula la respuesta
+  const res = fakeRes();
 
-    expect(mockSearchMovie).toHaveBeenCalledWith("batman");
+  //Ejecuta el controller con la request y response simuladas
+  await searchMovies(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith([
-        expect.objectContaining({
-            title: "Batman",
-            poster: "img.jpg",
-            year: "2008",
-        }),
-    ]);
+  // Verifica que el controller llamó al servicio con el parámetro correcto
+  expect(mockSearchMovie).toHaveBeenCalledWith("batman");
+
+  // Verifica el código de estado HTTP devuelto por el controller
+  expect(res.status).toHaveBeenCalledWith(200);
+  //transformación de datos
+  expect(res.json).toHaveBeenCalledWith([
+    //verifica que el objeto, contenga las propiedades
+    expect.objectContaining({
+      title: "Batman",
+      poster: "img.jpg",
+      year: "2008",
+    }),
+  ]);
 } );
 
-//test getMovieByTitle
+//TEST getMovieByTitle
 test("devuelve 404 si no encuentra película", async () =>{
-    mockSearchMovie.mockResolvedValue([]);
+  //simulamos larespuesta que dara searchMovie
+  mockSearchMovie.mockResolvedValue([]);
 
-    const req = {params: {title: "xxx"}};
-    const res = fakeRes();
+  const req = { params: { title: "xxx" } };
+  //Mock, simula la respuesta
+  const res = fakeRes();
 
-    await getMovieByTitle(req,res);
+  await getMovieByTitle(req, res);
 
-    expect(mockSearchMovie).toHaveBeenCalledWith("xxx");
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({
-        message: "Película no encontrada",
-    });
+  expect(mockSearchMovie).toHaveBeenCalledWith("xxx");
+  expect(res.status).toHaveBeenCalledWith(404);
+  expect(res.json).toHaveBeenCalledWith({
+    message: "Película no encontrada",
+  });
 });
 
+//TEST getMovieByTitle
 test("devuelve película con reviews", async () => {
-    const movieMock = [
+  // Simula la respuesta de la API externa (OMDb)
+  const movieMock = [
     {
       Title: "Batman",
       imdbRating: "8.5",
     },
   ];
 
+  // Simula las reviews obtenidas desde el servicio de scraping
   const reviewsMock = ["Muy buena"];
 
+  // Configura el mock del servicio de búsqueda de películas
   mockSearchMovie.mockResolvedValue(movieMock);
+
+  // de reviews
   mockGetMovieReviews.mockResolvedValue(reviewsMock);
 
+  // Simula parámetros de la URL (req.params.title)
   const req = { params: { title: "batman" } };
+
+  // Simula respuesta
   const res = fakeRes();
 
+  // Ejecuta el controller
   await getMovieByTitle(req, res);
 
-  // valida llamadas
+  // Verifica que se llamó al servicio de búsqueda con el título correcto
   expect(mockSearchMovie).toHaveBeenCalledWith("batman");
+  // Verifica que se llamaron las reviews con el título normalizado
   expect(mockGetMovieReviews).toHaveBeenCalledWith("Batman");
 
-  // valida respuesta
+  // Verifica la respuesta HTTP y la estructura final del objeto
   expect(res.status).toHaveBeenCalledWith(200);
   expect(res.json).toHaveBeenCalledWith(
     expect.objectContaining({
       title: "Batman",
       rating: "8.5",
       reviews: reviewsMock,
-    })
+    }),
   );
 });
 
-// get movies
+//TEST getAllMovies
 test("devuelve todas las películas", async () => {
-    const movies = [{title: "Batman"}];
+  // Simula listado de películas en base de datos
+  const movies = [{ title: "Batman" }];
 
-    mockMovieModel.find.mockResolvedValue(movies);
+  // Mock de MongoDB find()
+  mockMovieModel.find.mockResolvedValue(movies);
 
-    const req = {};
-    const res = fakeRes();
+  const req = {};
+  const res = fakeRes();
+  // Ejecuta controller
+  await getAllMovies(req, res);
 
-    await getAllMovies(req, res);
-
-    expect(mockMovieModel.find).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(movies);
+  // Verifica acceso a base de datos
+  expect(mockMovieModel.find).toHaveBeenCalled();
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith(movies);
 });
 
-//createMovies
+//TEST createMovie
 test("crea una película correctamente", async () => {
-    const movie = {title: "Batman"};
-    mockMovieModel.create.mockResolvedValue(movie);
+  // Datos de entrada para crear película
+  const movie = { title: "Batman" };
+  // Simula creación en base de datos
+  mockMovieModel.create.mockResolvedValue(movie);
 
-    const req = { body: movie};
-    const res = fakeRes();
+  const req = { body: movie };
+  const res = fakeRes();
 
-    await createMovie(req, res);
+  // Ejecuta controller
+  await createMovie(req, res);
 
-    expect(mockMovieModel.create).toHaveBeenCalledWith(movie);
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(movie);
+  // Verifica que se llamó a create con los datos correctos
+  expect(mockMovieModel.create).toHaveBeenCalledWith(movie);
 
+  // Verifica respuesta de creación
+  expect(res.status).toHaveBeenCalledWith(201);
+  expect(res.json).toHaveBeenCalledWith(movie);
 });
 
-//updateMovie
+//TEST updateMovie
 test("devuelve 404 si no existe la película", async () => {
-    mockMovieModel.findByIdAndUpdate.mockResolvedValue(null);
+  // Simula que no se encuentra la película
+  mockMovieModel.findByIdAndUpdate.mockResolvedValue(null);
 
-    const req = {
-        params: { id: "123" },
-        body: { title: "Nuevo" },
-    }
-    const res = fakeRes();
+  const req = {
+    params: { id: "123" },
+    body: { title: "Nuevo" },
+  };
+  const res = fakeRes();
 
-    await updateMovie(req,res);
+  await updateMovie(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(404);
+  // Verifica error por dato que no existe
+  expect(res.status).toHaveBeenCalledWith(404);
 });
 
+//TEST updateMovie
 test("actualiza correctamente una película", async () => {
-    const updatedMovie = { title: "Nuevo"};
+  // Simula película actualizada
+  const updatedMovie = { title: "Nuevo" };
 
-    mockMovieModel.findByIdAndUpdate.mockResolvedValue(updatedMovie);
+  mockMovieModel.findByIdAndUpdate.mockResolvedValue(updatedMovie);
 
-    const req = {
-        params: {id: "123"},
-        body: {title: "Nuevo"},
-    }
-    const res = fakeRes();
+  const req = {
+    params: { id: "123" },
+    body: { title: "Nuevo" },
+  };
+  const res = fakeRes();
 
-    await updateMovie(req,res);
+  await updateMovie(req, res);
 
-    expect(mockMovieModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        "123",
-        {title: "Nuevo"},
-        {new: true}
-    );
-    expect(mockMovieModel.findByIdAndUpdate).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(updatedMovie);
+  // Verifica parámetros correctos en la actualización
+  expect(mockMovieModel.findByIdAndUpdate).toHaveBeenCalledWith(
+    "123",
+    { title: "Nuevo" },
+    { new: true },
+  );
+  // Verifica que solo se llamó una vez
+  expect(mockMovieModel.findByIdAndUpdate).toHaveBeenCalledTimes(1);
+  // Verifica respuesta correcta
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith(updatedMovie);
 });
 
-//deleteMovie
+//TEST deleteMovie
 test("devuelve 404 si no existe la película", async ()=> {
-    mockMovieModel.findByIdAndDelete.mockResolvedValue(null);
+  // Simula eliminación fallida no existe el registro
+  mockMovieModel.findByIdAndDelete.mockResolvedValue(null);
 
-    const req = {params: {id: "123"}};
-    const res = fakeRes();
+  const req = { params: { id: "123" } };
+  const res = fakeRes();
 
-    await deleteMovie(req,res);
-
-    expect(res.status).toHaveBeenCalledWith(404);
+  // Ejecuta controller
+  await deleteMovie(req, res);
+  // Verifica error por recurso inexistente
+  expect(res.status).toHaveBeenCalledWith(404);
 });
 
+//TEST deleteMovie
 test("elimina correctamente una película", async ()=> {
-    mockMovieModel.findByIdAndDelete.mockResolvedValue({});
+  // Simula eliminación exitosa
+  mockMovieModel.findByIdAndDelete.mockResolvedValue({});
 
-    const req = {params: {id: "123"}};
-    const res = fakeRes();
+  const req = { params: { id: "123" } };
+  const res = fakeRes();
+  // Ejecuta controller
+  await deleteMovie(req, res);
 
-    await deleteMovie(req, res);
-
-    expect(mockMovieModel.findByIdAndDelete).toHaveBeenCalledWith("123");
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({message: "Película eliminada",});
+  // Verifica llamada al modelo con ID correcto
+  expect(mockMovieModel.findByIdAndDelete).toHaveBeenCalledWith("123");
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith({ message: "Película eliminada" });
 });
 
+//TEST getRandomMoviesController
 test("devuelve películas aleatorias formateadas", async () => {
-    mockGetRandomMovies.mockResolvedValue([
-      {
-        title: "Batman",
-        poster: "img.jpg",
-        year: "2008",
-      },
-    ]);
+  // Simula respuesta del servicio de películas aleatorias
+  mockGetRandomMovies.mockResolvedValue([
+    {
+      title: "Batman",
+      poster: "img.jpg",
+      year: "2008",
+    },
+  ]);
 
-    const req = {};
-    const res = fakeRes();
-
-    await getRandomMoviesController(req,res);
-
-    expect(mockGetRandomMovies).toHaveBeenCalled();
-
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith([
-        expect.objectContaining({
-            title: "Batman",
-            poster: "img.jpg",
-            year: "2008",
-        }),
-    ]);
+  const req = {};
+  const res = fakeRes();
+  // Ejecuta controller
+  await getRandomMoviesController(req, res);
+  // Verifica que se llamó al servicio
+  expect(mockGetRandomMovies).toHaveBeenCalled();
+  // Verifica respuesta HTTP y formato final
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith([
+    expect.objectContaining({
+      title: "Batman",
+      poster: "img.jpg",
+      year: "2008",
+    }),
+  ]);
 });
