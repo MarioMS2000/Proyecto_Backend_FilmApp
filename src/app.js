@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser")
 const swaggerUi = require("swagger-ui-express")
 require("dotenv").config();
 
-// Routes
+// Routes 
 const webRoutes = require("./routes/web.routes");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
