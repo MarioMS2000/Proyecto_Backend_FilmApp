@@ -24,6 +24,23 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+const requireWebAuth = (req, res, next) => {
+  const token = getTokenFromRequest(req);
+
+  if (!token) {
+    // En las rutas web interesa volver al login en lugar de mostrar JSON.
+    return res.redirect("/login");
+  }
+
+  try {
+    req.user = verifyAccessToken(token);
+    return next();
+  } catch (error) {
+    return res.redirect("/login");
+  }
+};
+
 module.exports = {
   requireAuth,
+  requireWebAuth,
 };

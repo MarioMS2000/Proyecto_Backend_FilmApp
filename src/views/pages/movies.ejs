@@ -46,7 +46,11 @@
                     <p>Director:<%= movie.director %></p>
                     <p>Género:<%= movie.genre %></p>
                     <p>Duración:<%= movie.duration %></p>
-                    <!--btn favoritos - para guardar peli-->
+                    <form action="/favorites" method="POST">
+                      <input type="hidden" name="sourceType" value="<%= movie.sourceType %>">
+                      <input type="hidden" name="sourceMovieId" value="<%= movie.imdbID %>">
+                      <button type="submit">Guardar favorito</button>
+                    </form>
                     <!-- LINK DETALLE DE PELI -->
                     <a href="/movies/<%= movie.imdbID %>">Ver detalles</a>
                   </article>

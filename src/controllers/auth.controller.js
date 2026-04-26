@@ -26,7 +26,7 @@ const login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, accessTokenCookieOptions);
 
-    return res.status(200).json({token: req.cookies});
+    return res.status(200).json({ token: accessToken });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

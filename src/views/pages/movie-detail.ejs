@@ -19,6 +19,12 @@
       <p>Plot: <%= movie.plot %></p>
       <p>Actores: <%= Array.isArray(movie.actors) ? movie.actors.join(", ") : movie.actors %></p>
       <p>Rating: <%= movie.rating %></p>
+
+      <form action="/favorites" method="POST">
+        <input type="hidden" name="sourceType" value="<%= movie.sourceType %>">
+        <input type="hidden" name="sourceMovieId" value="<%= movie.imdbID %>">
+        <button type="submit">Guardar favorito</button>
+      </form>
     
       <h2>Reviews</h2>
     

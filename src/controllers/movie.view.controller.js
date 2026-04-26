@@ -19,6 +19,8 @@ const showMovies = async (req, res) => {
       genre: movie.genre || movie.Genre,
       duration: movie.duration || movie.Runtime,
       imdbID: movie.imdbID,
+      // La vista manda este origen al crear el favorito.
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
     }));
   } else {
     const randomMovies = await getRandomMovies();
@@ -31,6 +33,7 @@ const showMovies = async (req, res) => {
       genre: movie.genre || movie.Genre,
       duration: movie.duration || movie.Runtime,
       imdbID: movie.imdbID,
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
     }));
   }
   return res.render("pages/movies", {
@@ -72,6 +75,8 @@ const showMovieDetail = async (req, res) => {
       plot: movie.plot || movie.Plot,
       actors: movie.actors || movie.Actors,
       rating: movie.imdbRating,
+      imdbID: movie.imdbID || imdbID,
+      sourceType: movie.source === "mongo" ? "MONGO" : "OMDB",
       reviews,
     };
     return res.render("pages/movie-detail", {
@@ -83,7 +88,7 @@ const showMovieDetail = async (req, res) => {
 const createMovie = async (req, res) => {
   try {
     const movie = await Movie.create(req.body);
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
   } catch (error) {
     return res.status(500).json({
       message: "Error creando película",
@@ -102,7 +107,7 @@ const updateMovie = async (req, res) => {
         message: "Película no encontrada",
       });
     }
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
   } catch (error) {
     return res.status(500).json({
       message: "Error actualizando película",
@@ -119,7 +124,7 @@ const deleteMovie = async (req, res) => {
         message: "Película no encontrada",
       });
     }
-    return res.redirect("/admin-movies")
+    return res.redirect("/admin/movies")
 
   } catch (error) {
     return res.status(500).json({
