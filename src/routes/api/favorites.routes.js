@@ -12,8 +12,8 @@ const favoritesValidator = require("../../validators/favorites.validator");
 const router = express.Router();
 
 // CRUD Fav
-router.get("/", requireAuth, requireRole("user"), getFavorites);
-router.post("/", requireAuth, requireRole("user"), favoritesValidator, addFavorite);
-router.delete("/:id", requireAuth, requireRole("user"), removeFavorite);
+router.get("/", requireAuth, /* requireRole("user"), */ getFavorites);
+router.post("/", requireAuth, /* requireRole("user"), */ favoritesValidator, addFavorite);
+router.delete("/:id", requireAuth, /* requireRole("user"), */ removeFavorite);
 
 module.exports = router;
