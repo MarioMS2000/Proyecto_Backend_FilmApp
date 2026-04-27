@@ -1,0 +1,380 @@
+openapi: 3.0.0
+info:
+  title: API film app
+  description: >-
+    # 🚀 Get started here
+
+
+    This template guides you through CRUD operations (GET, POST, PUT, DELETE),
+    variables, and tests.
+
+
+    ## 🔖 **How to use this template**
+
+
+    #### **Step 1: Send requests**
+
+
+    RESTful APIs allow you to perform CRUD operations using the POST, GET, PUT,
+    and DELETE HTTP methods.
+
+
+    This collection contains each of these
+    [request](https://learning.postman.com/docs/sending-requests/requests/)
+    types. Open each request and click "Send" to see what happens.
+
+
+    #### **Step 2: View responses**
+
+
+    Observe the response tab for status code (200 OK), response time, and size.
+
+
+    #### **Step 3: Send new Body data**
+
+
+    Update or add new data in "Body" in the POST request. Typically, Body data
+    is also used in PUT request.
+
+
+    ```
+
+    {
+        "name": "Add your name in the body"
+    }
+
+     ```
+
+    #### **Step 4: Update the variable**
+
+
+    Variables enable you to store and reuse values in Postman. We have created a
+    [variable](https://learning.postman.com/docs/sending-requests/variables/)
+    called `base_url` with the sample request
+    [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me).
+    Replace it with your API endpoint to customize this collection.
+
+
+    #### **Step 5: Add tests in the "Scripts" tab**
+
+
+    Adding tests to your requests can help you confirm that your API is working
+    as expected. You can write test scripts in JavaScript and view the output in
+    the "Test Results" tab.
+
+
+    <img
+    src="https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n"
+    alt="" height="1530" width="2162">
+
+
+    ## 💪 Pro tips
+
+
+    - Use folders to group related requests and organize the collection.
+        
+    - Add more
+    [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)
+    to verify if the API works as expected and execute workflows.
+        
+
+    ## 💡Related templates
+
+
+    [API testing
+    basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  
+
+    [API
+    documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  
+
+    [Authorization
+    methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)
+  version: 1.0.0
+servers:
+  - url: /api
+    description: API same origin
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: auth
+  - name: user
+  - name: favorites
+  - name: movies
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: pepito
+                email: pepito2@gmail.com
+                password: '12345'
+                password2: '12345'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: login
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: pepito@gmail.com
+                password: '12345'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: logout
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: string
+              example: >-
+                "{\n    \"name\" : \"pepito\",\n    \"email\":
+                \"pepito@gmail.com\",\n    \"password\": \"12345\",\n   
+                \"password2\": \"12345\"\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/restorepassword:
+    put:
+      tags:
+        - auth
+      summary: change password
+      description: >-
+        This is a PUT request and it is used to overwrite an existing piece of
+        data. For instance, after you create an entity with a POST request, you
+        may want to modify that later. You can do that using a PUT request. You
+        typically identify the entity being updated by including an identifier
+        in the URL (eg. `id=1`).
+
+
+        A successful PUT request typically returns a `200 OK`, `201 Created`, or
+        `204 No Content` response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: '14'
+                password: '12345'
+                newPassword: pepito
+                newPassword2: pepito
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/all:
+    get:
+      tags:
+        - user
+      summary: get all users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/14:
+    put:
+      tags:
+        - user
+      summary: change role by admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                role: admin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user
+      summary: delete user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /favorites/:
+    get:
+      tags:
+        - favorites
+      summary: get user favorites
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - favorites
+      summary: create favorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                sourceType: OMDB
+                sourceMovieId: tt1160419
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /favorites/tt1160419:
+    delete:
+      tags:
+        - favorites
+      summary: delete from favorites
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies:
+    get:
+      tags:
+        - movies
+      summary: GET
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - movies
+      summary: POST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                imdbID: tt1375666
+                title: Inception
+                year: '2010'
+                genre: Action, Adventure, Sci-Fi
+                director: Christopher Nolan
+                duration: 148 min
+                poster: >-
+                  https://m.media-amazon.com/images/M/MV5BMmYwZjYyN2QtOTYzZC00ZDI2LTg3MGEtN2E0ZjY3NzQ2YjNlXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg
+                actors:
+                  - Leonardo DiCaprio
+                  - Joseph Gordon-Levitt
+                  - Elliot Page
+                plot: >-
+                  Un ladrón que roba secretos a través de los sueños recibe la
+                  tarea de implantar una idea en la mente de un objetivo.
+                imdbRating: '8.8'
+                source: mongo
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies/random:
+    get:
+      tags:
+        - movies
+      summary: RANDOM
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies/69ef15e0ca2bb28386ee6f0d:
+    put:
+      tags:
+        - movies
+      summary: PUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Interstellar TEST
+                genre: Sci-Fi, Drama, Adventure
+                imdbRating: '9.5'
+                duration: 171 min
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies/69ef1723ca2bb28386ee6f10:
+    delete:
+      tags:
+        - movies
+      summary: DELETE
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies/search/Spider-Man:
+    get:
+      tags:
+        - movies
+      summary: GET Detail Movies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
