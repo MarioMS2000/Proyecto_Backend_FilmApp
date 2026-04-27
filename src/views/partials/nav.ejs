@@ -1,27 +1,35 @@
-<header class="app-header">
+<header class="app-header <%= typeof user !== "undefined" && user ? (user.role === "admin" ? "admin-header" : "user-header") : "" %>">
   <a class="brand" href="/movies">Film App</a>
 
   <% if (typeof user !== "undefined" && user) { %>
-    <nav class="main-nav" aria-label="Navegacion principal">
+    <nav class="main-nav <%= user.role === "admin" ? "admin-nav" : "user-nav" %>" aria-label="Navegacion principal">
       <a href="/movies">Peliculas</a>
       <a href="/favorites">Favoritos</a>
       <a href="/profile">Perfil</a>
 
-      <% if (user.role === "admin") { %>
-        <details class="admin-menu">
-          <summary aria-label="Abrir menu de administracion">
-            <span></span>
-            <span></span>
-            <span></span>
-          </summary>
-          <div class="admin-menu-panel">
+      <details class="admin-menu <%= user.role === "admin" ? "" : "user-menu" %>">
+        <summary aria-label="Abrir menu de navegacion">
+          <span></span>
+          <span></span>
+          <span></span>
+        </summary>
+        <div class="admin-menu-panel">
+          <a class="admin-menu-mobile-link" href="/movies">Peliculas</a>
+          <a class="admin-menu-mobile-link" href="/favorites">Favoritos</a>
+          <a class="admin-menu-mobile-link" href="/profile">Perfil</a>
+
+          <% if (user.role === "admin") { %>
             <a href="/admin/users">Administrar usuarios</a>
             <a href="/admin/users/new">Crear usuario</a>
             <a href="/admin/movies">Editar peliculas</a>
             <a href="/admin/movies/new">Crear pelicula</a>
-          </div>
-        </details>
-      <% } %>
+          <% } %>
+
+          <form class="admin-menu-logout" action="/logout" method="POST">
+            <button type="submit">Salir</button>
+          </form>
+        </div>
+      </details>
 
       <form class="logout-form" action="/logout" method="POST">
         <button type="submit">Salir</button>

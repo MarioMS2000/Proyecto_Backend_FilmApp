@@ -316,6 +316,10 @@ th {
   position: relative;
 }
 
+.user-menu {
+  display: none;
+}
+
 .admin-menu summary {
   display: grid;
   place-items: center;
@@ -355,7 +359,30 @@ th {
   color: var(--color-text);
 }
 
+.admin-menu-panel .admin-menu-mobile-link,
+.admin-menu-logout {
+  display: none;
+}
+
+.admin-menu-logout {
+  margin: 0;
+}
+
+.admin-menu-logout button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
 .admin-menu-panel a:hover,
+.admin-menu-logout button:hover,
 .main-nav > a:hover,
 .logout-form button:hover {
   background: var(--color-info-soft);
@@ -435,10 +462,17 @@ th {
   gap: 10px;
 }
 
+.card-actions form,
+.row-actions form,
+.inline-form {
+  margin: 0;
+}
+
 .small-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 88px;
   min-height: 34px;
   padding: 8px 12px;
   border: 0;
@@ -447,6 +481,9 @@ th {
   color: var(--color-bg);
   font: inherit;
   font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -613,7 +650,6 @@ th {
 }
 
 @media (max-width: 760px) {
-  .app-header,
   .main-nav,
   .page-heading.split,
   .detail-layout,
@@ -622,15 +658,59 @@ th {
     grid-template-columns: 1fr;
   }
 
-  .app-header,
   .main-nav,
   .page-heading.split {
+    flex-direction: column;
+  }
+
+  .app-header {
+    align-items: flex-start;
     flex-direction: column;
   }
 
   .admin-menu-panel {
     left: 0;
     right: auto;
+  }
+
+  .admin-header,
+  .user-header {
+    flex-direction: row;
+  }
+
+  .user-menu {
+    display: block;
+  }
+
+  .user-nav,
+  .admin-nav {
+    width: auto;
+    margin-left: auto;
+    align-items: flex-end;
+  }
+
+  .user-nav > a,
+  .user-nav > .logout-form,
+  .admin-nav > a,
+  .admin-nav > .logout-form {
+    display: none;
+  }
+
+  .user-nav .admin-menu,
+  .admin-nav .admin-menu {
+    align-self: flex-end;
+  }
+
+  .user-nav .admin-menu-panel,
+  .admin-nav .admin-menu-panel {
+    left: auto;
+    right: 0;
+    min-width: 240px;
+  }
+
+  .admin-menu-panel .admin-menu-mobile-link,
+  .admin-menu-logout {
+    display: block;
   }
 }
 
